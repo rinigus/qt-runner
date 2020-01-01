@@ -10,23 +10,16 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = qxcompositor
+TARGET = flatpak-runner
 
 CONFIG += sailfishapp
 
 DEFINES += QT_COMPOSITOR_QUICK
 
-LIBS += -L ../../lib
-
 QT += quick qml
 QT += quick-private
 
 QT += compositor
-
-#  if you want to compile QtCompositor as part of the application
-#  instead of linking to it, remove the QT += compositor and uncomment
-#  the following line
-#include (../../src/compositor/compositor.pri)
 
 SOURCES += \
     src/main.cpp \
@@ -34,14 +27,13 @@ SOURCES += \
     src/xclipboard.cpp
 
 OTHER_FILES += \
+    qml/main.qml \
+    qml/compositor/XWaylandContainer.qml \
     qml/cover/CoverPage.qml \
-    qml/pages/FirstPage.qml \
+    qml/pages/FirstPage.qml
 
 DISTFILES += \
-    qml/compositor/XWaylandContainer.qml \
-    rpm/qxcompositor.spec \
-    rpm/qxcompositor.changes.in \
-    qml/qxcompositor.qml
+    rpm/flatpak-runner.spec
 
 HEADERS += \
     src/qmlcompositor.h \

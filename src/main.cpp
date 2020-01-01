@@ -71,7 +71,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QScopedPointer<QQuickView> view(SailfishApp::createView());
     view->rootContext()->setContextProperty("sshUserOption", parser.value(sshUserOption));
     view->rootContext()->setContextProperty("sshPortOption", parser.value(sshPortOption));
-    view->setSource(SailfishApp::pathTo("qml/qxcompositor.qml"));
+    view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->setColor(Qt::black);
     QmlCompositor compositor(view.data(), qPrintable(parser.value(displayOption)));
     QObject::connect(view.data(), SIGNAL(afterRendering()), &compositor, SLOT(sendCallbacks()));
