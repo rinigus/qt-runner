@@ -29,7 +29,6 @@ SOURCES += \
 OTHER_FILES += \
     qml/main.qml \
     qml/compositor/XWaylandContainer.qml \
-    qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml
 
 DISTFILES += \
