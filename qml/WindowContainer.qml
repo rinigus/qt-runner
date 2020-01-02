@@ -50,38 +50,20 @@ Item {
     height: parent.height
     z: 1
 
-    Component.onCompleted: {
-        compositor.fullscreenSurface = child.surface
-
-        if (sshUserOption && sshPortOption) {
-            console.log("create xclipboard")
-            xclipboard.createObject(container)
-        }
-    }
-
-    visible: true
-    onVisibleChanged: {
-        child.surface.clientRenderingEnabled = visible
-    }
-
     property variant child: null // qwaylandsurfaceitem
 
-    onChildChanged: {
-        if (child)
-            delayTimer.start()
+    Component.onCompleted: {
+        // always set component as a fullscreen if there is none
+        if (!compositor.fullscreenSurface)
+            compositor.fullscreenSurface = child.surface
+        child.height = Qt.binding(function() { return container.height });
+        child.width = Qt.binding(function() { return container.width });
     }
 
     Connections {
         target: container.child ? container.child.surface : null
 
-        onUnmapped: {
-            container.parent.removeWindow(container)
-        }
-    }
-    Connections {
-        target: container.child ? container.child : null
-        onSurfaceDestroyed: {
-            container.parent.removeWindow(container)
-        }
+        onUnmapped: container.parent.removeWindow(container)
+        onSurfaceDestroyed: container.parent.removeWindow(container)
     }
 }

@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 
 Page {
     id: root
-    objectName: "firstPage"
+    objectName: "mainPage"
 
     Label {
         id: hintLabel
@@ -11,9 +11,6 @@ Page {
         text: "Empty"
         font.pixelSize: Theme.fontSizeLarge
     }
-
-    property variant selectedWindow: null
-    property bool hasFullscreenWindow: typeof compositor != "undefined" && compositor.fullscreenSurface !== null
 
     function windowAdded(window) {
         var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
@@ -32,7 +29,6 @@ Page {
 
         hintLabel.visible = false
 
-        root.selectedWindow = windowContainer.child
         windowContainer.child.takeFocus()
     }
 
