@@ -41,25 +41,69 @@
 #include <QQmlContext>
 #include <QQuickView>
 #include <QCommandLineParser>
+#include <QStandardPaths>
+#include <QDir>
 #include <sailfishapp.h>
+#include <iostream>
 
 #include "qmlcompositor.h"
+
+QString getFreeWaylandSocket()
+{
+  QDir runtime(QStandardPaths::standardLocations(QStandardPaths::RuntimeLocation).first());
+  QString relative_base = "../../display";
+  // limit search for the limited number of displays
+  for (int i=0; i < 1000; ++i)
+    {
+      QString wd = QString("%1/wayland-%2").arg(relative_base).arg(i);
+      if (!runtime.exists(wd))
+        return wd;
+    }
+  return QString();
+}
 
 int main(int argc, char *argv[])
 {
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
 
     QCommandLineParser parser;
-    QCommandLineOption displayOption({"d", "display", "wayland-socket-name"},
-                                     "Wayland display socket",
-                                     "socket", "../../display/wayland-1");
-    parser.addOption(displayOption);
+    parser.setApplicationDescription(QCoreApplication::translate("main",
+                                                                 "Flatpak runner - helper application for running Flatpak applications"));
     parser.addHelpOption();
+    parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
     parser.process(*app);
+
+    QStringList posopt = parser.positionalArguments();
+    bool run = !posopt.isEmpty();
+    QString program = run ? posopt[0] : QString();
+    QStringList options = run ? posopt.mid(1) : QStringList();
+    if (run)
+      {
+        std::cout << "Starting: " << program.toStdString() << "\n";
+        if (!options.isEmpty())
+          {
+            std::cout << "Options: ";
+            for (QString &i: options)
+              std::cout << i.toStdString() << " ";
+            std::cout << "\n";
+          }
+      }
+    else
+      std::cout << "Starting empty Wayland server\n";
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
-    QmlCompositor compositor(view.data(), qPrintable(parser.value(displayOption)));
+
+    QString socket = getFreeWaylandSocket();
+    if (socket.isEmpty())
+      {
+        std::cerr << "Cannot find empty socket\n";
+        return -1;
+      }
+    else
+      std::cerr << "Wayland socket: " << socket.toStdString() << "\n";
+    QmlCompositor compositor(view.data(), socket.toStdString().c_str());
+
     QObject::connect(view.data(), SIGNAL(afterRendering()), &compositor, SLOT(sendCallbacks()));
     view->rootContext()->setContextProperty("compositor", &compositor);
 
