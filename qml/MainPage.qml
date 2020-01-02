@@ -44,11 +44,14 @@ Page {
     id: root
     objectName: "mainPage"
 
+    property int nwindows: 0
+
     Label {
         id: hintLabel
         anchors.centerIn: parent
-        text: "Empty"
         font.pixelSize: Theme.fontSizeLarge
+        text: qsTr("Flatpak Runner")
+        visible: nwindows <= 0
     }
 
     function windowAdded(window) {
@@ -66,7 +69,7 @@ Page {
         windowContainer.child.parent = windowContainer;
         windowContainer.child.touchEventsEnabled = true;
 
-        hintLabel.visible = false
+        nwindows += 1
 
         windowContainer.child.takeFocus()
     }
@@ -78,7 +81,7 @@ Page {
 
     function removeWindow(window) {
         window.destroy();
-        hintLabel.visible = true
+        nwindows -= 1
     }
 }
 

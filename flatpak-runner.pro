@@ -27,8 +27,8 @@ SOURCES += \
 
 OTHER_FILES += \
     qml/main.qml \
+    qml/MainPage.qml \
     qml/WindowContainer.qml \
-    qml/MainPage.qml
 
 DISTFILES += \
     rpm/flatpak-runner.spec
