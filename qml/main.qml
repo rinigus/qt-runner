@@ -51,6 +51,6 @@ ApplicationWindow {
 
     Connections {
         target: runner
-        onExit: appWindow.close()
+        onExit: Qt.quit()
     }
 }

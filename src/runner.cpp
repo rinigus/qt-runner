@@ -99,7 +99,8 @@ Runner::Runner(QString program, QStringList options, QString wayland_socket)
   connect(m_process, &QProcess::errorOccurred, this, &Runner::onError);
   connect(m_process, &QProcess::readyReadStandardError, this, &Runner::onStdErr);
   connect(m_process, &QProcess::readyReadStandardOutput, this, &Runner::onStdOut);
-  connect(m_process, SIGNAL(finished()), this, SLOT(onFinished()));
+  connect(m_process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+          this, &Runner::onFinished);
 
   m_command = fc;
   m_options = fo;
@@ -117,7 +118,7 @@ void Runner::onError(QProcess::ProcessError /*error*/)
   std::cerr << m_process->errorString().toStdString() << "\n";
 }
 
-void Runner::onFinished()
+void Runner::onFinished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
 {
   onStdErr();
   onStdOut();

@@ -61,7 +61,7 @@ signals:
 
 protected:
   void onError(QProcess::ProcessError error);
-  void onFinished();
+  void onFinished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/);
   void onStdOut();
   void onStdErr();
 
