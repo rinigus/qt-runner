@@ -46,4 +46,13 @@ compositor, the app has to be without dialog boxes with all contained
 within one window.
 
 In part, the limitations are imposed by old QtWayland (5.4) available
-on Sailfish currently.
+on Sailfish.
+
+
+## Acknowledgments
+
+The code is based on QtWayland [example
+compositor](https://github.com/qt/qtwayland/tree/5.4/examples/wayland/qml-compositor)
+and adaptation of it for Sailfish:
+[qxcompositor](https://github.com/elros34/qxcompositor)
+
