@@ -40,12 +40,12 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "pages"
+import "."
 
 ApplicationWindow {
     id: appWindow
 
-    initialPage: Component { FirstPage {}}
+    initialPage: Component { MainPage {}}
     cover: undefined
     allowedOrientations: (Orientation.Landscape | Orientation.LandscapeInverted) & defaultAllowedOrientations
     _defaultPageOrientations: allowedOrientations

@@ -8,16 +8,15 @@ Page {
     Label {
         id: hintLabel
         anchors.centerIn: parent
-        text: "No Xwayland window"
+        text: "Empty"
         font.pixelSize: Theme.fontSizeLarge
     }
 
     property variant selectedWindow: null
     property bool hasFullscreenWindow: typeof compositor != "undefined" && compositor.fullscreenSurface !== null
 
-
     function windowAdded(window) {
-        var windowContainerComponent = Qt.createComponent("../compositor/XWaylandContainer.qml");
+        var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
         if (windowContainerComponent.status !== Component.Ready) {
             console.warn("Error loading WindowContainer.qml: " +  windowContainerComponent.errorString());
             return;

@@ -23,18 +23,16 @@ QT += compositor
 
 SOURCES += \
     src/main.cpp \
-    src/qmlcompositor.cpp \
-    src/xclipboard.cpp
+    src/qmlcompositor.cpp
 
 OTHER_FILES += \
     qml/main.qml \
-    qml/compositor/XWaylandContainer.qml \
-    qml/pages/FirstPage.qml
+    qml/WindowContainer.qml \
+    qml/MainPage.qml
 
 DISTFILES += \
     rpm/flatpak-runner.spec
 
 HEADERS += \
-    src/qmlcompositor.h \
-    src/xclipboard.h
+    src/qmlcompositor.h
 
