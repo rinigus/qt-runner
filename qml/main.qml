@@ -3,7 +3,6 @@
 ** Copyright (C) 2017-2020 Elros https://github.com/elros34
 **               2020 Rinigus https://github.com/rinigus
 **               2012 Digia Plc and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of Flatpak Runner.
 **
