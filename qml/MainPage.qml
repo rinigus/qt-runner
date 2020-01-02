@@ -50,11 +50,14 @@ Page {
         id: hintLabel
         anchors.centerIn: parent
         font.pixelSize: Theme.fontSizeLarge
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
         text: {
             if (runner.program) return qsTr("Flatpak: %1").arg(runner.program);
             return qsTr("Flatpak Runner");
         }
         visible: nwindows <= 0
+        width: root.width - 2*Theme.horizontalPageMargin
         wrapMode: Text.WordWrap
     }
 
