@@ -44,9 +44,11 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <sailfishapp.h>
+
 #include <iostream>
 
 #include "qmlcompositor.h"
+#include "runner.h"
 
 QString getFreeWaylandSocket()
 {
@@ -65,10 +67,12 @@ QString getFreeWaylandSocket()
 int main(int argc, char *argv[])
 {
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    app->setApplicationName("flatpak-runner");
+    app->setOrganizationName("flatpak-runner");
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QCoreApplication::translate("main",
-                                                                 "Flatpak runner - helper application for running Flatpak applications"));
+                                                                 "Flatpak runner - helper for running Flatpak applications"));
     parser.addHelpOption();
     parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
     parser.process(*app);
@@ -92,7 +96,6 @@ int main(int argc, char *argv[])
       std::cout << "Starting empty Wayland server\n";
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
-    view->setSource(SailfishApp::pathTo("qml/main.qml"));
 
     QString socket = getFreeWaylandSocket();
     if (socket.isEmpty())
@@ -103,16 +106,21 @@ int main(int argc, char *argv[])
     else
       std::cerr << "Wayland socket: " << socket.toStdString() << "\n";
     QmlCompositor compositor(view.data(), socket.toStdString().c_str());
-
     QObject::connect(view.data(), SIGNAL(afterRendering()), &compositor, SLOT(sendCallbacks()));
     view->rootContext()->setContextProperty("compositor", &compositor);
 
+    Runner runner(program, options, socket);
+    view->rootContext()->setContextProperty("runner", &runner);
+
+    view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->create();
     QObject *firstPage = view->rootObject()->findChild<QObject*>("mainPage");
     QObject::connect(&compositor, SIGNAL(windowAdded(QVariant)), firstPage, SLOT(windowAdded(QVariant)));
     QObject::connect(&compositor, SIGNAL(windowResized(QVariant)), firstPage, SLOT(windowResized(QVariant)));
 
     view->show();
+    app->processEvents();
+    runner.start();
 
     return app->exec();
 }

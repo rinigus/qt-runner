@@ -48,4 +48,9 @@ ApplicationWindow {
     cover: undefined
     allowedOrientations: defaultAllowedOrientations
     _defaultPageOrientations: allowedOrientations
+
+    Connections {
+        target: runner
+        onExit: appWindow.close()
+    }
 }

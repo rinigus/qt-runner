@@ -23,7 +23,8 @@ QT += compositor
 
 SOURCES += \
     src/main.cpp \
-    src/qmlcompositor.cpp
+    src/qmlcompositor.cpp \
+    src/runner.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -34,5 +35,5 @@ DISTFILES += \
     rpm/flatpak-runner.spec
 
 HEADERS += \
-    src/qmlcompositor.h
-
+    src/qmlcompositor.h \
+    src/runner.h

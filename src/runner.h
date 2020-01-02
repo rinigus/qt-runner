@@ -1,8 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017-2020 Elros https://github.com/elros34
-**               2020 Rinigus https://github.com/rinigus
-**               2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2020 Rinigus https://github.com/rinigus
 **
 ** This file is part of Flatpak Runner.
 **
@@ -37,55 +35,41 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+#ifndef RUNNER_H
+#define RUNNER_H
 
-Page {
-    id: root
-    objectName: "mainPage"
+#include <QObject>
+#include <QProcess>
+#include <QString>
+#include <QStringList>
 
-    property int nwindows: 0
+class Runner : public QObject
+{
+  Q_OBJECT
 
-    Label {
-        id: hintLabel
-        anchors.centerIn: parent
-        font.pixelSize: Theme.fontSizeLarge
-        text: {
-            if (runner.program) return qsTr("Flatpak: %1").arg(runner.program);
-            return qsTr("Flatpak Runner");
-        }
-        visible: nwindows <= 0
-        wrapMode: Text.WordWrap
-    }
+  Q_PROPERTY(QString program READ program NOTIFY programChanged)
 
-    function windowAdded(window) {
-        var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
-        if (windowContainerComponent.status !== Component.Ready) {
-            console.warn("Error loading WindowContainer.qml: " +  windowContainerComponent.errorString());
-            return;
-        }
+public:
+  Runner(QString program, QStringList options, QString wayland_socket);
 
-        var windowContainer = windowContainerComponent.createObject(root, {
-                                                                    "child": compositor.item(window)
-                                                                    });
-        windowContainer.objectName = "windowContainer"
-        windowContainer.child.resizeSurfaceToItem = true
-        windowContainer.child.parent = windowContainer;
-        windowContainer.child.touchEventsEnabled = true;
+  Q_INVOKABLE void start();
+  QString program() const { return m_flatpak_program; }
 
-        nwindows += 1
+signals:
+  void programChanged(QString program);
+  void exit();
 
-        windowContainer.child.takeFocus()
-    }
+protected:
+  void onError(QProcess::ProcessError error);
+  void onFinished();
+  void onStdOut();
+  void onStdErr();
 
-    function windowResized(window) {
-        window.width = window.surface.size.width;
-        window.height = window.surface.size.height;
-    }
+protected:
+  QProcess   *m_process = nullptr;
+  QString     m_flatpak_program;
+  QString     m_command;
+  QStringList m_options;
+};
 
-    function removeWindow(window) {
-        window.destroy();
-        nwindows -= 1
-    }
-}
-
+#endif // RUNNER_H
