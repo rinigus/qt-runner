@@ -51,6 +51,9 @@ ApplicationWindow {
 
     Connections {
         target: runner
-        onExit: Qt.quit()
+        onExit: {
+            console.log("Skipping quit as it will hang the window. Proper exit is needed");
+            // Qt.quit();
+        }
     }
 }
