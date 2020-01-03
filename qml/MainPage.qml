@@ -53,12 +53,21 @@ Page {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         text: {
-            if (runner.program) return qsTr("Flatpak: %1").arg(runner.program);
+            if (runner.program && hintLabel.status)
+                return qsTr("Flatpak: %1\n%2").arg(runner.program).arg(hintLabel.status);
+            if (runner.program)
+                return qsTr("Flatpak: %1").arg(runner.program);
             return qsTr("Flatpak Runner");
         }
         visible: nwindows <= 0
         width: root.width - 2*Theme.horizontalPageMargin
         wrapMode: Text.WordWrap
+
+        property string status
+        Connections {
+            target: runner
+            onExit: hintLabel.status = qsTr("Application finished")
+        }
     }
 
     function windowAdded(window) {
