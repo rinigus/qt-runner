@@ -40,7 +40,6 @@
 #include <QGuiApplication>
 #include <QQmlContext>
 #include <QQuickView>
-#include <QCommandLineParser>
 #include <QStandardPaths>
 #include <QDir>
 #include <sailfishapp.h>
@@ -70,24 +69,53 @@ int main(int argc, char *argv[])
     app->setApplicationName("flatpak-runner");
     app->setOrganizationName("flatpak-runner");
 
-    QCommandLineParser parser;
-    parser.setApplicationDescription(QCoreApplication::translate("main",
-                                                                 "Flatpak runner - helper for running Flatpak applications"));
-    parser.addHelpOption();
-    parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
-    parser.process(*app);
+    QStringList posopt;
+    for (int i=1; i<argc; ++i)
+      posopt.append(argv[i]);
 
-    QStringList posopt = parser.positionalArguments();
+    if (posopt.length() >= 1 && posopt[0] == "--help")
+      {
+        std::cout << "\nFlatpak runner: helper for running Flatpak applications\n"
+                  << "\nUsage:\n"
+                  << argv[0] << " [flatpak run options] applicationID [application options]\n"
+                  << "\nWhen started without arguments, it will open Wayland server with the corresponding socket printed out in standard output\n"
+                  << "\nOther recognized options:\n"
+                  << " --help This help screen\n"
+                  << " other Qt options, as passed to Qt application\n"
+                  << "\n";
+        return 0;
+      }
+
     bool run = !posopt.isEmpty();
-    QString program = run ? posopt[0] : QString();
-    QStringList options = run ? posopt.mid(1) : QStringList();
+
+    QStringList flatpak_options;
+    QString program;
+    QStringList program_options;
+
     if (run)
       {
+        for (QString &s: posopt) {
+            bool isopt = s.startsWith('-');
+            if (isopt && program.isEmpty()) flatpak_options.append(s);
+            else if (isopt) program_options.append(s);
+            if (!isopt && program.isEmpty())
+              program = s;
+          }
+
         std::cout << "Starting: " << program.toStdString() << "\n";
-        if (!options.isEmpty())
+
+        if (!flatpak_options.isEmpty())
           {
-            std::cout << "Options: ";
-            for (QString &i: options)
+            std::cout << "Flatpak run options: ";
+            for (QString &i: flatpak_options)
+              std::cout << i.toStdString() << " ";
+            std::cout << "\n";
+          }
+
+        if (!program_options.isEmpty())
+          {
+            std::cout << "Program options: ";
+            for (QString &i: program_options)
               std::cout << i.toStdString() << " ";
             std::cout << "\n";
           }
@@ -109,7 +137,7 @@ int main(int argc, char *argv[])
     QObject::connect(view.data(), SIGNAL(afterRendering()), &compositor, SLOT(sendCallbacks()));
     view->rootContext()->setContextProperty("compositor", &compositor);
 
-    Runner runner(program, options, socket);
+    Runner runner(program, flatpak_options, program_options, socket);
     view->rootContext()->setContextProperty("runner", &runner);
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));

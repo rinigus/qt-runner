@@ -47,7 +47,7 @@
 #include <QDebug>
 
 
-Runner::Runner(QString program, QStringList options, QString wayland_socket)
+Runner::Runner(QString program, QStringList flatpak_options, QStringList program_options, QString wayland_socket)
 {
   if (program.isEmpty())
     return; // nothing to do
@@ -87,8 +87,11 @@ Runner::Runner(QString program, QStringList options, QString wayland_socket)
   fo << "--env=HYBRIS_EGLPLATFORM_DIR=/var/run/host/usr/lib/libhybris"
      << "--env=HYBRIS_LINKER_DIR=/usr/lib/arm-linux-gnueabihf/GL/default/lib/libhybris/linker";
 
+  // add supplied flatpak options in the end
+  fo << flatpak_options;
+
   // add program and its options
-  fo << program << options;
+  fo << program << program_options;
 
   // qDebug() << fo;
 

@@ -9,12 +9,13 @@ on Sailfish.
 To run Flatpak application, start
 
 ```
-flatpak-runner application [app_opt_1 app_opt_2 ...]
+flatpak-runner [flatpak_run_opt1 flatpak_run_opt2 ...] application [app_opt_1 app_opt_2 ...]
 ```
 
 where `application` is a full Flatpak application ID. You can specify
-application command line options as optional arguments to
-`flatpak-runner`.
+Flatpak run and application command line options as optional arguments
+to `flatpak-runner`. Options specified before application are
+considered as Flatpak run options.
 
 
 ## Mode of operation
