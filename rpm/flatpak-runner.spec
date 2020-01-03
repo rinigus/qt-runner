@@ -12,6 +12,7 @@ License:    LICENSE
 URL:        https://github.com/rinigus/flatpak-runner
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
+Requires:   rsync
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
@@ -33,6 +34,7 @@ Wrapper for running Flatpak apps on Sailfish.
 %install
 rm -rf %{buildroot}
 %qmake5_install
+chmod 755 %{buildroot}/usr/bin/flatpak-extension-hybris
 
 %files
 %defattr(-,root,root,-)

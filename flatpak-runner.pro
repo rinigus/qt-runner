@@ -12,6 +12,13 @@
 # The name of your application
 TARGET = flatpak-runner
 
+# PREFIX
+isEmpty(PREFIX) {
+    PREFIX = /usr
+}
+
+target.path = $$PREFIX/bin
+
 CONFIG += sailfishapp
 
 DEFINES += QT_COMPOSITOR_QUICK
@@ -30,6 +37,7 @@ OTHER_FILES += \
     qml/main.qml \
     qml/MainPage.qml \
     qml/WindowContainer.qml \
+    scripts/flatpak-extension-hybris
 
 DISTFILES += \
     rpm/flatpak-runner.spec
@@ -37,3 +45,7 @@ DISTFILES += \
 HEADERS += \
     src/qmlcompositor.h \
     src/runner.h
+
+script_extension.files = scripts/flatpak-extension-hybris
+script_extension.path = $$PREFIX/bin
+INSTALLS += script_extension
