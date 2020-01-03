@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
         for (QString &s: posopt) {
             bool isopt = s.startsWith('-');
             if (isopt && program.isEmpty()) flatpak_options.append(s);
-            else if (isopt) program_options.append(s);
+            else if (isopt || !program.isEmpty()) program_options.append(s);
             if (!isopt && program.isEmpty())
               program = s;
           }
@@ -105,20 +105,10 @@ int main(int argc, char *argv[])
         std::cout << "Starting: " << program.toStdString() << "\n";
 
         if (!flatpak_options.isEmpty())
-          {
-            std::cout << "Flatpak run options: ";
-            for (QString &i: flatpak_options)
-              std::cout << i.toStdString() << " ";
-            std::cout << "\n";
-          }
+          std::cout << "Flatpak run options: " << flatpak_options.join(' ').toStdString() << "\n";
 
         if (!program_options.isEmpty())
-          {
-            std::cout << "Program options: ";
-            for (QString &i: program_options)
-              std::cout << i.toStdString() << " ";
-            std::cout << "\n";
-          }
+          std::cout << "Program options: " << program_options.join(' ').toStdString() << "\n";
       }
     else
       std::cout << "Starting empty Wayland server\n";
