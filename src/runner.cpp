@@ -78,14 +78,49 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   fo << QString("--env=QT_WAYLAND_FORCE_DPI=%1").arg(int(dpi));
 
   // filesystems
-  fo << "--filesystem=/system:ro" << "--filesystem=/vendor:ro";
+  fo << "--filesystem=/system:ro"
+     << "--filesystem=/vendor:ro"
+     << "--filesystem=/odm:ro";
 
   // devices
   fo << "--device=all";
 
+//  // libhybris
+//  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/var/run/host/usr/lib/libhybris"
+//     << "--env=HYBRIS_LINKER_DIR=/var/run/host/usr/lib/libhybris/linker";
+
+//  // check if we have HYBRIS_LD_LIBRARY_PATH defined
+//  QStringList ldlibs = env.value("HYBRIS_LD_LIBRARY_PATH",
+//                                 "/usr/libexec/droid-hybris/system/lib:/vendor/lib:/system/lib").split(':');
+//  QStringList ldlibs_processed;
+//  for (QString &s: ldlibs)
+//    {
+//      if (s.startsWith("/usr"))
+//        ldlibs_processed.append("/var/run/host" + s);
+//      else
+//        ldlibs_processed.append(s);
+//    }
+//  fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
+
+//  // set LD_LIBRARY_PATH to the used extension
+//  if (settings.value("main/set_ld_path", 1).toInt() > 0)
+//    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/default/lib").toString();
+
   // libhybris
-  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/var/run/host/usr/lib/libhybris"
+  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/usr/lib/arm-linux-gnueabihf/GL/default/lib/libhybris"
      << "--env=HYBRIS_LINKER_DIR=/usr/lib/arm-linux-gnueabihf/GL/default/lib/libhybris/linker";
+
+  // check if we have HYBRIS_LD_LIBRARY_PATH defined
+  QStringList ldlibs = env.value("HYBRIS_LD_LIBRARY_PATH",
+                                 "/usr/libexec/droid-hybris/system/lib:/vendor/lib:/system/lib").split(':');
+  QStringList ldlibs_processed;
+  ldlibs_processed << "/usr/lib/arm-linux-gnueabihf/GL/default/libexec/droid-hybris/system/lib"
+                   << ldlibs;
+  fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
+
+  // set LD_LIBRARY_PATH to the used extension
+  if (settings.value("main/set_ld_path", 1).toInt() > 0)
+    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/default/lib").toString();
 
   // add supplied flatpak options in the end
   fo << flatpak_options;
@@ -93,7 +128,10 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   // add program and its options
   fo << program << program_options;
 
-  // qDebug() << fo;
+  // debug
+#if 0
+  std::cout << fo.join(' ').toStdString() << "\n";
+#endif
 
   // start application
   m_process = new QProcess(this);
