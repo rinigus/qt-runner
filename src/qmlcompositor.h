@@ -58,7 +58,6 @@ public:
 
 signals:
     void windowAdded(QVariant window);
-    void windowDestroyed(QVariant window);
     void windowResized(QVariant window);
     void fullscreenSurfaceChanged();
 

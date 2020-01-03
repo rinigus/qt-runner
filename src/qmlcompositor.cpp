@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017-2020 Elros https://github.com/elros34
+**               2020 Rinigus https://github.com/rinigus
 **               2012 Digia Plc and/or its subsidiary(-ies).
 **
 ** This file is part of Flatpak Runner.
@@ -86,17 +87,19 @@ void QmlCompositor::surfaceMapped()
 void QmlCompositor::surfaceUnmapped()
 {
     QWaylandQuickSurface *surface = qobject_cast<QWaylandQuickSurface *>(sender());
-    if (surface == m_fullscreenSurface)
+    if (surface == m_fullscreenSurface) {
         m_fullscreenSurface = 0;
-    emit windowDestroyed(QVariant::fromValue(surface));
+        emit fullscreenSurfaceChanged();
+      }
 }
 
 void QmlCompositor::surfaceDestroyed(QObject *object)
 {
     QWaylandQuickSurface *surface = static_cast<QWaylandQuickSurface *>(object);
-    if (surface == m_fullscreenSurface)
+    if (surface == m_fullscreenSurface) {
         m_fullscreenSurface = 0;
-    emit windowDestroyed(QVariant::fromValue(surface));
+        emit fullscreenSurfaceChanged();
+      }
 }
 
 void QmlCompositor::sendCallbacks()
