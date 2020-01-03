@@ -17,6 +17,14 @@ Flatpak run and application command line options as optional arguments
 to `flatpak-runner`. Options specified before application are
 considered as Flatpak run options.
 
+For libhybris support, you have to generate Flatpak extension. For that,
+run `flatpak-extension-hybris` as a local user (nemo). This has to be run
+every time you update libhybris on your device (usually after each Sailfish
+update).
+
+When installing Flatpak applications, use `--user` options to install it in
+your home folder.
+
 
 ## Mode of operation
 
