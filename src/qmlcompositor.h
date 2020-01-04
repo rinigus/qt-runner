@@ -71,6 +71,7 @@ private slots:
     void surfaceMapped();
     void surfaceUnmapped();
     void surfaceDestroyed(QObject *object);
+    void sizeChanged(int /*unused*/);
 
 protected:
     void surfaceCreated(QWaylandSurface *surface);
