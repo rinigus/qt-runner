@@ -63,13 +63,13 @@ QWaylandQuickSurface *QmlCompositor::fullscreenSurface() const
 
 void QmlCompositor::sizeChanged(int)
 {
-  QSize size = window()->size();
-  setSize(size.height(), size.width());
+    QSize size = window()->size();
+    setSize(size.height(), size.width());
 }
 
 void QmlCompositor::setSize(int width, int height)
 {
-  setOutputGeometry(QRect(0,0, width, height));
+    setOutputGeometry(QRect(0,0, width, height));
 }
 
 QWaylandSurfaceItem *QmlCompositor::item(QWaylandSurface *surf)
