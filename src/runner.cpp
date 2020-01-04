@@ -129,8 +129,9 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   fo << program << program_options;
 
   // debug
-#if 0
-  std::cout << fo.join(' ').toStdString() << "\n";
+#if 1
+  std::cout << "WAYLAND_DISPLAY=\"" << wayland_socket.toStdString() << "\" "
+            << fc.toStdString() << " " << fo.join(' ').toStdString() << "\n";
 #endif
 
   // start application
