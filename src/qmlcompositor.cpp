@@ -38,8 +38,9 @@
 ****************************************************************************/
 
 #include "qmlcompositor.h"
-#include <QWaylandSurfaceInterface>
+#include <QGuiApplication>
 #include <QQuickView>
+#include <QWaylandSurfaceInterface>
 
 #include <QDebug>
 
@@ -64,7 +65,7 @@ QWaylandQuickSurface *QmlCompositor::fullscreenSurface() const
 void QmlCompositor::sizeChanged(int)
 {
     QSize size = window()->size();
-    setSize(size.height(), size.width());
+    setSize(size.width(), size.height());
 }
 
 void QmlCompositor::setSize(int width, int height)
