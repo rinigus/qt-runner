@@ -26,9 +26,12 @@ DEFINES += QT_COMPOSITOR_QUICK
 QT += quick qml
 QT += quick-private
 
+QT += dbus
+
 QT += compositor
 
 SOURCES += \
+    src/dbuscontainerstate.cpp \
     src/main.cpp \
     src/qmlcompositor.cpp \
     src/runner.cpp
@@ -43,6 +46,7 @@ DISTFILES += \
     rpm/flatpak-runner.spec
 
 HEADERS += \
+    src/dbuscontainerstate.h \
     src/qmlcompositor.h \
     src/runner.h
 

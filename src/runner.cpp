@@ -47,7 +47,7 @@
 #include <QDebug>
 
 
-Runner::Runner(QString program, QStringList flatpak_options, QStringList program_options, QString wayland_socket)
+Runner::Runner(QString program, QStringList flatpak_options, QStringList program_options, QString wayland_socket, QString dbusaddress)
 {
   if (program.isEmpty())
     return; // nothing to do
@@ -63,6 +63,7 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   // Wayland
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
   env.insert("WAYLAND_DISPLAY", wayland_socket);
+  env.insert("FLATPAK_MALIIT_CONTAINER_DBUS", dbusaddress);
 
   // dpi
   double dpi = qGuiApp->primaryScreen()->physicalDotsPerInch();
@@ -131,6 +132,7 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   // debug
 #if 1
   std::cout << "WAYLAND_DISPLAY=\"" << wayland_socket.toStdString() << "\" "
+            << "FLATPAK_MALIIT_CONTAINER_DBUS=\"" << dbusaddress.toStdString() << "\" "
             << fc.toStdString() << " " << fo.join(' ').toStdString() << "\n";
 #endif
 

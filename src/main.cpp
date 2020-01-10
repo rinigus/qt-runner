@@ -46,6 +46,7 @@
 
 #include <iostream>
 
+#include "dbuscontainerstate.h"
 #include "qmlcompositor.h"
 #include "runner.h"
 
@@ -115,6 +116,7 @@ int main(int argc, char *argv[])
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
 
+    // compositor
     QString socket = getFreeWaylandSocket();
     if (socket.isEmpty())
       {
@@ -127,7 +129,11 @@ int main(int argc, char *argv[])
     QObject::connect(view.data(), SIGNAL(afterRendering()), &compositor, SLOT(sendCallbacks()));
     view->rootContext()->setContextProperty("compositor", &compositor);
 
-    Runner runner(program, flatpak_options, program_options, socket);
+    // dbus service
+    DBusContainerState dbuscontainer(compositor.window());
+
+    // runner
+    Runner runner(program, flatpak_options, program_options, socket, dbuscontainer.address());
     view->rootContext()->setContextProperty("runner", &runner);
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
