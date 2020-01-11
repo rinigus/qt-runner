@@ -10,6 +10,10 @@
 DBusContainerState::DBusContainerState(const QWindow *window):
   QObject(), m_window(window)
 {
+  // follow application state
+  connect(qGuiApp, &QGuiApplication::applicationStateChanged, this, &DBusContainerState::onActiveState);
+  onActiveState(qGuiApp->applicationState());
+
   // follow orientation
   connect(m_window, &QWindow::contentOrientationChanged, this, &DBusContainerState::onWindowOrientationChanged);
   onWindowOrientationChanged(m_window->contentOrientation());
@@ -43,10 +47,24 @@ static int orientationAngle(Qt::ScreenOrientation orientation)
 }
 
 
+bool DBusContainerState::activeState() const
+{
+  return (qGuiApp->applicationState() == Qt::ApplicationActive);
+}
+
+
+void DBusContainerState::onActiveState(Qt::ApplicationState state)
+{
+  bool s = (state == Qt::ApplicationActive);
+  emit activeStateChanged(s);
+  // update window orientation if the application became active
+  if (s)
+    onWindowOrientationChanged(m_window->contentOrientation());
+}
+
 void DBusContainerState::onWindowOrientationChanged(Qt::ScreenOrientation orientation)
 {
   m_orientation = orientationAngle(orientation);
-  qDebug() << "Flatpak runner: orientation changed to " << orientation << " " << m_orientation;
   emit orientationChanged(m_orientation);
 }
 
@@ -54,7 +72,6 @@ void DBusContainerState::onWindowOrientationChanged(Qt::ScreenOrientation orient
 void DBusContainerState::onNewConnection(const QDBusConnection &c)
 {
   QDBusConnection connection(c);
-  qDebug() << "New connection via DBus";
   connection.registerObject("/", this, QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
   connection.registerService(FLATPAK_RUNNER_DBUS_CONT_SERVICE);
 }

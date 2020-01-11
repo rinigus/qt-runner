@@ -12,6 +12,8 @@ class DBusContainerState: public QObject
 {
   Q_OBJECT
   Q_CLASSINFO("D-Bus Interface", FLATPAK_RUNNER_DBUS_CONT_IFACE)
+
+  Q_PROPERTY(int activeState READ activeState NOTIFY activeStateChanged)
   Q_PROPERTY(int orientation READ orientation NOTIFY orientationChanged)
 
 public:
@@ -19,12 +21,15 @@ public:
 
   QString address() const { return m_server->address(); }
 
+  bool activeState() const;
   int orientation() const { return m_orientation; }
 
 signals:
+  void activeStateChanged(bool state);
   void orientationChanged(int orientation);
 
 protected:
+  void onActiveState(Qt::ApplicationState state);
   void onNewConnection(const QDBusConnection &c);
   void onWindowOrientationChanged(Qt::ScreenOrientation orientation);
 
