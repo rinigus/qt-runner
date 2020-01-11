@@ -86,6 +86,9 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   // devices
   fo << "--device=all";
 
+  // keyboard
+  fo << "--talk-name=org.maliit.server";
+
 //  // libhybris
 //  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/var/run/host/usr/lib/libhybris"
 //     << "--env=HYBRIS_LINKER_DIR=/var/run/host/usr/lib/libhybris/linker";
