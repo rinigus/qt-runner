@@ -89,6 +89,10 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   // keyboard
   fo << "--talk-name=org.maliit.server";
 
+  // Set default Qt Quick Controls style
+  fo << "--env=QT_QUICK_CONTROLS_STYLE=Plasma"
+     << "--env=QT_QUICK_CONTROLS_MOBILE=1";
+
 //  // libhybris
 //  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/var/run/host/usr/lib/libhybris"
 //     << "--env=HYBRIS_LINKER_DIR=/var/run/host/usr/lib/libhybris/linker";
