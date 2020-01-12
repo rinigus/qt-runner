@@ -89,6 +89,11 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   // keyboard
   fo << "--talk-name=org.maliit.server";
 
+  // temporary location for maliit plugin
+  // TODO make it as KDE runtime extension
+  fo << "--filesystem=/opt/flatpak/maliit/org.kde.Platform/arm/5.12:ro"
+     << "--env=QT_PLUGIN_PATH=/app/lib64/plugins:/app/lib/plugins:/usr/share/runtime/lib/plugins:/opt/flatpak/maliit/org.kde.Platform/arm/5.12";
+
   // Set default Qt Quick Controls style
   fo << "--env=QT_QUICK_CONTROLS_STYLE=Plasma"
      << "--env=QT_QUICK_CONTROLS_MOBILE=1";
