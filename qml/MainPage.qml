@@ -83,6 +83,7 @@ Page {
         windowContainer.objectName = "windowContainer"
         windowContainer.child.resizeSurfaceToItem = true
         windowContainer.child.parent = windowContainer;
+        windowContainer.child.anchors.fill = windowContainer;
         windowContainer.child.touchEventsEnabled = true;
 
         nwindows += 1

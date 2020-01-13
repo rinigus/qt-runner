@@ -54,8 +54,6 @@ Item {
         // always set component as a fullscreen if there is none
         if (!compositor.fullscreenSurface)
             compositor.fullscreenSurface = child.surface
-        child.height = Qt.binding(function() { return container.height });
-        child.width = Qt.binding(function() { return container.width });
     }
 
     Connections {
