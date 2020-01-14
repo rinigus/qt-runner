@@ -64,6 +64,8 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
   env.insert("WAYLAND_DISPLAY", wayland_socket);
   env.insert("FLATPAK_MALIIT_CONTAINER_DBUS", dbusaddress);
+  if (!env.contains("FLATPAK_GL_DRIVERS"))
+    env.insert("FLATPAK_GL_DRIVERS", "host");
 
   // dpi
   double dpi = qGuiApp->primaryScreen()->physicalDotsPerInch();
@@ -117,23 +119,23 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
 
 //  // set LD_LIBRARY_PATH to the used extension
 //  if (settings.value("main/set_ld_path", 1).toInt() > 0)
-//    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/default/lib").toString();
+//    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
 
   // libhybris
-  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/usr/lib/arm-linux-gnueabihf/GL/default/lib/libhybris"
-     << "--env=HYBRIS_LINKER_DIR=/usr/lib/arm-linux-gnueabihf/GL/default/lib/libhybris/linker";
+  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/usr/lib/arm-linux-gnueabihf/GL/host/lib/libhybris"
+     << "--env=HYBRIS_LINKER_DIR=/usr/lib/arm-linux-gnueabihf/GL/host/lib/libhybris/linker";
 
   // check if we have HYBRIS_LD_LIBRARY_PATH defined
   QStringList ldlibs = env.value("HYBRIS_LD_LIBRARY_PATH",
                                  "/usr/libexec/droid-hybris/system/lib:/vendor/lib:/system/lib").split(':');
   QStringList ldlibs_processed;
-  ldlibs_processed << "/usr/lib/arm-linux-gnueabihf/GL/default/libexec/droid-hybris/system/lib"
+  ldlibs_processed << "/usr/lib/arm-linux-gnueabihf/GL/host/libexec/droid-hybris/system/lib"
                    << ldlibs;
   fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
 
   // set LD_LIBRARY_PATH to the used extension
   if (settings.value("main/set_ld_path", 1).toInt() > 0)
-    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/default/lib").toString();
+    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
 
   // add supplied flatpak options in the end
   fo << flatpak_options;
