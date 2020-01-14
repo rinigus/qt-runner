@@ -44,8 +44,7 @@ import QtCompositor 1.0
 
 Item {
     id: container
-    width: parent.width
-    height: parent.height
+    anchors.fill: parent
     z: 1
 
     property variant child: null // qwaylandsurfaceitem
