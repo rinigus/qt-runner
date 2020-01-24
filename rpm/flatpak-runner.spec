@@ -37,7 +37,13 @@ rm -rf %{buildroot}
 %qmake5_install
 chmod 755 %{buildroot}/usr/bin/flatpak-extension-hybris
 
+desktop-file-install --delete-original       \
+  --dir %{buildroot}%{_datadir}/applications             \
+   %{buildroot}%{_datadir}/applications/*.desktop
+
 %files
 %defattr(-,root,root,-)
 %{_bindir}
 %{_datadir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
