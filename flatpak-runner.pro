@@ -50,9 +50,9 @@ HEADERS += \
     src/qmlcompositor.h \
     src/runner.h
 
-script_extension.files = scripts/flatpak-extension-hybris
-script_extension.path = $$PREFIX/bin
-INSTALLS += script_extension
+scripts.files = scripts
+scripts.path = $$PREFIX/share/$${TARGET}
+INSTALLS += scripts
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172 256x256
 DISTFILES += $${TARGET}.desktop

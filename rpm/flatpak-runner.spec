@@ -8,7 +8,7 @@ Summary:    Flatpak runner
 Version:    0.3.2
 Release:    1
 Group:      Qt/Qt
-License:    LICENSE
+License:    BSD-3
 URL:        https://github.com/rinigus/flatpak-runner
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
@@ -35,7 +35,8 @@ Wrapper for running Flatpak apps on Sailfish.
 %install
 rm -rf %{buildroot}
 %qmake5_install
-chmod 755 %{buildroot}/usr/bin/flatpak-extension-hybris
+
+chmod 755 %{buildroot}/%{_datadir}/%{name}/scripts/flatpak-extension-hybris
 
 desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \
