@@ -17,8 +17,8 @@
 **     notice, this list of conditions and the following disclaimer in
 **     the documentation and/or other materials provided with the
 **     distribution.
-**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
-**     of its contributors may be used to endorse or promote products derived
+**   * Neither the name of the copyright holder nor the names of its
+**     contributors may be used to endorse or promote products derived
 **     from this software without specific prior written permission.
 **
 **
@@ -47,6 +47,7 @@
 #include <iostream>
 
 #include "dbuscontainerstate.h"
+#include "imageconverter.h"
 #include "qmlcompositor.h"
 #include "runner.h"
 
@@ -136,6 +137,10 @@ int main(int argc, char *argv[])
     // runner
     Runner runner(program, flatpak_options, program_options, socket, dbuscontainer.address());
     view->rootContext()->setContextProperty("runner", &runner);
+
+    // image converter
+    ImageConverter imageconv;
+    view->rootContext()->setContextProperty("imageConverter", &imageconv);
 
     // whether settings are allowed and misc variables
     view->rootContext()->setContextProperty("modeSettings", !run);
