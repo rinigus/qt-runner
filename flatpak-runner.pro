@@ -22,6 +22,7 @@ target.path = $$PREFIX/bin
 CONFIG += sailfishapp
 
 DEFINES += QT_COMPOSITOR_QUICK
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT += quick qml
 QT += quick-private
@@ -38,9 +39,14 @@ SOURCES += \
 
 OTHER_FILES += \
     qml/main.qml \
+    qml/AboutPage.qml \
     qml/MainPage.qml \
+    qml/LabelC.qml \
+    qml/Python.qml \
+    qml/Space.qml \
     qml/WindowContainer.qml \
-    scripts/flatpak-extension-hybris
+    scripts/flatpak-extension-hybris \
+    fpk/*.py
 
 DISTFILES += \
     rpm/flatpak-runner.spec
@@ -53,6 +59,14 @@ HEADERS += \
 scripts.files = scripts
 scripts.path = $$PREFIX/share/$${TARGET}
 INSTALLS += scripts
+
+fpk.files = fpk
+fpk.path = $$PREFIX/share/$${TARGET}
+INSTALLS += fpk
+
+icons.files = icons
+icons.path = $$PREFIX/share/$${TARGET}
+INSTALLS += icons
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172 256x256
 DISTFILES += $${TARGET}.desktop

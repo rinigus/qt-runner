@@ -39,13 +39,77 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "."
 
 Page {
     id: root
     objectName: "mainPage"
 
-    property int nwindows: 0
+    property int  nwindows: 0
+    property bool settingsInitDone: false
 
+    BusyIndicator {
+        id: busyInd
+        anchors.centerIn: root
+        running: false
+        size: BusyIndicatorSize.Large
+    }
+
+    LabelC {
+        id: busyInfoMessage
+        anchors.top: busyInd.bottom
+        anchors.topMargin: Theme.paddingLarge
+        horizontalAlignment: Text.AlignHCenter
+        visible: busyInd.running
+    }
+
+    // Settings: List of applications
+    SilicaFlickable {
+        id: flickable
+        anchors.fill: parent
+        contentHeight: column.height + 2*Theme.paddingLarge
+        visible: settingsInitDone && modeSettings && nwindows <= 0
+
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("About")
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+            }
+        }
+
+        Column {
+            id: column
+            spacing: Theme.paddingLarge
+            width: parent.width
+
+            PageHeader {
+                title: qsTr("Flatpak Runner")
+            }
+
+            LabelC {
+                text: qsTr("Reload installed applications and refresh the desktop icons.")
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                enabled: app.ready
+                preferredWidth: Theme.buttonWidthLarge
+                text: qsTr("Refresh apps")
+                onClicked: {
+                    app.py.call("fpk.refresh_apps", [], function(result) {
+                        console.log(JSON.stringify(result))
+                    });
+                }
+            }
+
+            Space {}
+
+        }
+
+        VerticalScrollDecorator { flickable: flickable }
+    }
+
+    // Start and end notification
     Label {
         id: hintLabel
         anchors.centerIn: parent
@@ -59,7 +123,7 @@ Page {
                 return qsTr("Flatpak: %1").arg(runner.program);
             return qsTr("Flatpak Runner");
         }
-        visible: nwindows <= 0
+        visible: nwindows <= 0 && !modeSettings
         width: root.width - 2*Theme.horizontalPageMargin
         wrapMode: Text.WordWrap
 
@@ -70,6 +134,32 @@ Page {
         }
     }
 
+    // Initialize in Settings mode
+    function initSettings() {
+        busyInd.running = true;
+        if (app.py.call_sync("fpk.has_extension"))
+            initSettingsApps();
+        else
+            initSettingsExtension();
+    }
+
+    function initSettingsApps() {
+        busyInfoMessage.text = qsTr("Update list of applications");
+        app.py.call("fpk.refresh_apps", [], function(result) {
+            busyInd.running = false;
+            root.settingsInitDone = true;
+            console.log(JSON.stringify(result))
+        });
+    }
+
+    function initSettingsExtension() {
+        busyInfoMessage.text = qsTr("Initialize or update GL extension");
+        app.py.call("fpk.sync_extension", [], function() {
+            initSettingsApps()
+        });
+    }
+
+    // Handling of contained application
     function windowAdded(window) {
         var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
         if (windowContainerComponent.status !== Component.Ready) {
@@ -78,7 +168,7 @@ Page {
         }
 
         var windowContainer = windowContainerComponent.createObject(root, {
-                                                                    "child": compositor.item(window)
+                                                                        "child": compositor.item(window)
                                                                     });
         windowContainer.objectName = "windowContainer"
         windowContainer.child.resizeSurfaceToItem = true

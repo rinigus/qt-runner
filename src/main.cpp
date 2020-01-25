@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     app->setApplicationName("flatpak-runner");
     app->setOrganizationName("flatpak-runner");
+    app->setApplicationVersion(APP_VERSION);
 
     QStringList posopt;
     for (int i=1; i<argc; ++i)
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
 
     if (posopt.length() >= 1 && posopt[0] == "--help")
       {
-        std::cout << "\nFlatpak runner: helper for running Flatpak applications\n"
+        std::cout << "\nFlatpak Runner: helper for running Flatpak applications\n"
                   << "\nUsage:\n"
                   << argv[0] << " [flatpak run options] applicationID [application options]\n"
                   << "\nWhen started without arguments, it will open Wayland server with the corresponding socket printed out in standard output\n"
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
           std::cout << "Program options: " << program_options.join(' ').toStdString() << "\n";
       }
     else
-      std::cout << "Starting empty Wayland server\n";
+      std::cout << "Starting empty Wayland server and enabling settings\n";
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
 
@@ -135,6 +136,10 @@ int main(int argc, char *argv[])
     // runner
     Runner runner(program, flatpak_options, program_options, socket, dbuscontainer.address());
     view->rootContext()->setContextProperty("runner", &runner);
+
+    // whether settings are allowed and misc variables
+    view->rootContext()->setContextProperty("modeSettings", !run);
+    view->rootContext()->setContextProperty("programVersion", APP_VERSION);
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->create();

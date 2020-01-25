@@ -41,13 +41,13 @@ LIBDIR="/usr/lib"
 
 mkdir -p $TARGET/lib/libhybris
 
-echo "Copy main libraries"
+echo "Synchronize main libraries"
 for file in ${LIBS}; do
     if [ -f ${LIBDIR}/$file ]; then
         echo "  $file"
         #ln -s /var/run/host/${LIBDIR}/${file} ${TARGET}/lib/${file}
-        rm ${TARGET}/lib/${file} || true
-        cp -a ${LIBDIR}/${file} ${TARGET}/lib/${file} || echo "Couldn't copy, probably not found:" ${LIBDIR}/${file}
+        #rm ${TARGET}/lib/${file} || true
+        rsync -a ${LIBDIR}/${file} ${TARGET}/lib/${file} || echo "Couldn't copy, probably not found:" ${LIBDIR}/${file}
     fi
 done
 echo

@@ -29,7 +29,7 @@ Wrapper for running Flatpak apps on Sailfish.
 %setup -q -n %{name}-%{version}
 
 %build
-%qtc_qmake5 
+%qtc_qmake5 VERSION='%{version}-%{release}'
 %qtc_make %{?_smp_mflags}
 
 %install

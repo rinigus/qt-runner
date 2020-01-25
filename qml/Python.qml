@@ -1,8 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017-2020 Elros https://github.com/elros34
-**               2020 Rinigus https://github.com/rinigus
-**               2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2020 Rinigus https://github.com/rinigus
 **
 ** This file is part of Flatpak Runner.
 **
@@ -38,41 +36,19 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import Sailfish.Silica 1.0
-import "."
+import io.thp.pyotherside 1.2
 
-ApplicationWindow {
-    id: app
+Python {
+    id: py
 
-    initialPage: MainPage {}
-    cover: undefined
-    allowedOrientations: defaultAllowedOrientations
-    _defaultPageOrientations: allowedOrientations
-
-    property bool ready: py && py.ready
-    property var  py
-
-    Connections {
-        target: runner
-        onExit: {
-            console.log("Skipping quit as it will hang the window. Proper exit is needed");
-            // Qt.quit();
-        }
-    }
+    property bool ready: false
 
     Component.onCompleted: {
-        if (modeSettings) {
-            var pyComponent = Qt.createComponent("Python.qml");
-            if (pyComponent.status !== Component.Ready) {
-                console.warn("Error loading Python: " +  pyComponent.errorString());
-                return;
-            }
-            app.py = pyComponent.createObject(app);
-        }
+        addImportPath(Qt.resolvedUrl(".."));
+        importModule("fpk", function() {
+            py.ready = true;
+        });
     }
 
-    onReadyChanged: {
-        if (ready && modeSettings)
-            initialPage.initSettings();
-    }
+    onError: console.log("Error in Python: %1".arg(traceback));
 }

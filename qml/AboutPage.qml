@@ -1,8 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017-2020 Elros https://github.com/elros34
-**               2020 Rinigus https://github.com/rinigus
-**               2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2020 Rinigus https://github.com/rinigus
 **
 ** This file is part of Flatpak Runner.
 **
@@ -41,38 +39,56 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "."
 
-ApplicationWindow {
-    id: app
+Page {
+    id: root
+    objectName: "mainPage"
 
-    initialPage: MainPage {}
-    cover: undefined
-    allowedOrientations: defaultAllowedOrientations
-    _defaultPageOrientations: allowedOrientations
+    property int nwindows: 0
 
-    property bool ready: py && py.ready
-    property var  py
+    // Settings
+    SilicaFlickable {
+        id: flickable
+        anchors.fill: parent
+        contentHeight: column.height + 2*Theme.paddingLarge
+        visible: nwindows <= 0 && modeSettings
 
-    Connections {
-        target: runner
-        onExit: {
-            console.log("Skipping quit as it will hang the window. Proper exit is needed");
-            // Qt.quit();
-        }
-    }
+        Column {
+            id: column
+            spacing: Theme.paddingLarge
+            width: parent.width
 
-    Component.onCompleted: {
-        if (modeSettings) {
-            var pyComponent = Qt.createComponent("Python.qml");
-            if (pyComponent.status !== Component.Ready) {
-                console.warn("Error loading Python: " +  pyComponent.errorString());
-                return;
+            PageHeader {
+                title: qsTr("About Flatpak Runner")
             }
-            app.py = pyComponent.createObject(app);
-        }
-    }
 
-    onReadyChanged: {
-        if (ready && modeSettings)
-            initialPage.initSettings();
+            Image {
+                anchors.horizontalCenter: parent.horizontalCenter
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+                source: "../icons/flatpak-runner.svg"
+                sourceSize.width: Math.min(column.height,column.width)/4
+            }
+
+            LabelC {
+                text: qsTr("Version") + ": " + programVersion
+            }
+
+            LabelC {
+                text: qsTr("License: BSD-3")
+            }
+
+            LabelC {
+                text: qsTr("Homepage: <a href='https://github.com/sailfishos-flatpak/flatpak-runner'>https://github.com/sailfishos-flatpak/flatpak-runner</a>")
+            }
+
+            LabelC {
+                text: qsTr("This application allows you to refresh list of installed Flatpak applications, " +
+                           "set environment variables applied by default to all applications and the application-specific ones. " +
+                           "In addition, it is used to host Flatpak applications while they run on Sailfish OS.")
+            }
+       }
+
+       VerticalScrollDecorator { flickable: flickable }
     }
 }
+
