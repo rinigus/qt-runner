@@ -35,27 +35,22 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import io.thp.pyotherside 1.4
+#ifndef IMAGECONVERTER_H
+#define IMAGECONVERTER_H
 
-Python {
-    id: py
+#include <QObject>
 
-    property bool ready: false
+class ImageConverter : public QObject
+{
+  Q_OBJECT
+public:
+  explicit ImageConverter(QObject *parent = nullptr);
 
-    Component.onCompleted: {
-        addImportPath(Qt.resolvedUrl(".."));
-        importModule("fpk", function() {
-            py.ready = true;
-        });
-    }
+  Q_INVOKABLE void saveAsPng(QString input, QString pngname);
 
-    onError: console.log("Error in Python: %1".arg(traceback));
+signals:
 
-    onReceived: {
-        if (!data.length) return;
-        if (data[0] === "saveAsPng" && data.length === 3) {
-            imageConverter.saveAsPng(data[1], data[2]);
-        }
-    }
-}
+public slots:
+};
+
+#endif // IMAGECONVERTER_H

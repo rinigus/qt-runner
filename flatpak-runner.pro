@@ -24,7 +24,7 @@ CONFIG += sailfishapp
 DEFINES += QT_COMPOSITOR_QUICK
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-QT += quick qml
+QT += quick qml svg
 QT += quick-private
 
 QT += dbus
@@ -33,6 +33,7 @@ QT += compositor
 
 SOURCES += \
     src/dbuscontainerstate.cpp \
+    src/imageconverter.cpp \
     src/main.cpp \
     src/qmlcompositor.cpp \
     src/runner.cpp
@@ -53,6 +54,7 @@ DISTFILES += \
 
 HEADERS += \
     src/dbuscontainerstate.h \
+    src/imageconverter.h \
     src/qmlcompositor.h \
     src/runner.h
 

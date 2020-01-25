@@ -145,7 +145,7 @@ Page {
 
     function initSettingsApps() {
         busyInfoMessage.text = qsTr("Update list of applications");
-        app.py.call("fpk.refresh_apps", [imageConverter], function(result) {
+        app.py.call("fpk.refresh_apps", [], function(result) {
             busyInd.running = false;
             root.settingsInitDone = true;
             console.log(JSON.stringify(result))

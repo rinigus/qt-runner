@@ -9,7 +9,7 @@ def has_extension():
     return has_extension_impl()
 
 def refresh_apps(just_delete = False):
-    return refresh_apps_impl(just_delete)
+    return refresh_apps_impl(just_delete=just_delete)
 
 def remove_extension():
     remove_extension_impl()
