@@ -40,16 +40,11 @@ import "."
 
 Page {
     id: root
-    objectName: "mainPage"
 
-    property int nwindows: 0
-
-    // Settings
     SilicaFlickable {
         id: flickable
         anchors.fill: parent
         contentHeight: column.height + 2*Theme.paddingLarge
-        visible: nwindows <= 0 && modeSettings
 
         Column {
             id: column
