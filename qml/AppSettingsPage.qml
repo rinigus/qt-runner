@@ -226,7 +226,6 @@ Dialog {
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                enabled: app.ready
                 preferredWidth: Theme.buttonWidthLarge
                 text: qsTr("Add new variable")
                 onClicked: {

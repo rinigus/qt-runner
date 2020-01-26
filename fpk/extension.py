@@ -11,10 +11,9 @@ def has_extension():
 
 def remove_extension():
     if os.path.exists(extpath):
-        shutils.rmtree(extpath)
+        shutil.rmtree(extpath)
 
 def sync_extension():
     script = os.path.join( pathlib.Path(__file__).parent.parent.absolute(),
                            "scripts", "flatpak-extension-hybris")
-    print(script)
     os.system(script)

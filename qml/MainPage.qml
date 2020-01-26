@@ -130,6 +130,10 @@ Page {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
+            MenuItem {
+                text: qsTr("Extension")
+                onClicked: pageStack.push(Qt.resolvedUrl("ExtensionPage.qml"))
+            }
         }
 
         VerticalScrollDecorator { flickable: alist }
@@ -187,6 +191,7 @@ Page {
         property string status
     }
 
+    // Connections and signal handlers
     Connections {
         target: runner
         onExit: {
