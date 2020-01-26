@@ -64,10 +64,57 @@ Page {
     }
 
     // Settings: List of applications
-    SilicaFlickable {
-        id: flickable
+    SilicaListView {
+        id: alist
         anchors.fill: parent
-        contentHeight: column.height + 2*Theme.paddingLarge
+        header: PageHeader {
+            title: qsTr("Flatpak Runner")
+        }
+
+        delegate: ListItem {
+            contentHeight: Math.max(icon.height,
+                                    name.height + fpk.height + fpk.anchors.topMargin) + Theme.paddingLarge
+            width: alist.width
+
+            Image {
+                id: icon
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.horizontalPageMargin
+                anchors.top: parent.top
+                anchors.topMargin: Theme.paddingLarge/2
+                source: model.icon
+                sourceSize.width: Theme.itemSizeLarge
+            }
+
+            Label {
+                id: name
+                anchors.left: icon.right
+                anchors.leftMargin: Theme.paddingLarge
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.horizontalPageMargin
+                anchors.top: parent.top
+                anchors.topMargin: Theme.paddingLarge/2
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeLarge
+                text: model.name
+                wrapMode: Text.WordWrap
+            }
+
+            Label {
+                id: fpk
+                anchors.left: icon.right
+                anchors.leftMargin: Theme.paddingLarge
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.horizontalPageMargin
+                anchors.top: name.bottom
+                anchors.topMargin: Theme.paddingSmall
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                text: model.flatpak
+            }
+        }
+
+        model: ListModel {}
         visible: settingsInitDone && modeSettings && nwindows <= 0
 
         PullDownMenu {
@@ -77,36 +124,28 @@ Page {
             }
         }
 
-        Column {
-            id: column
-            spacing: Theme.paddingLarge
-            width: parent.width
+        VerticalScrollDecorator { flickable: alist }
 
-            PageHeader {
-                title: qsTr("Flatpak Runner")
+        Connections {
+            target: settings
+            onAppListChanged: {
+                alist.model.clear();
+                alist.model.append({
+                                       'flatpak': 'default',
+                                       'name': qsTr('Default settings'),
+                                       'icon': Qt.resolvedUrl("../icons/flatpak-runner.svg")
+                                   });
+                var apps = settings.apps();
+                apps.forEach(function (item, index) {
+                    alist.model.append({
+                                           'flatpak': item,
+                                           'name': settings.appName(item),
+                                           'icon': settings.appIcon(item)
+                                       })
+                });
+
             }
-
-            LabelC {
-                text: qsTr("Reload installed applications and refresh the desktop icons.")
-            }
-
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                enabled: app.ready
-                preferredWidth: Theme.buttonWidthLarge
-                text: qsTr("Refresh apps")
-                onClicked: {
-                    app.py.call("fpk.refresh_apps", [], function(result) {
-                        console.log(JSON.stringify(result))
-                    });
-                }
-            }
-
-            Space {}
-
         }
-
-        VerticalScrollDecorator { flickable: flickable }
     }
 
     // Start and end notification
@@ -147,8 +186,8 @@ Page {
         busyInfoMessage.text = qsTr("Update list of applications");
         app.py.call("fpk.refresh_apps", [], function(result) {
             busyInd.running = false;
+            settings.updateApps(JSON.stringify(result));
             root.settingsInitDone = true;
-            console.log(JSON.stringify(result))
         });
     }
 

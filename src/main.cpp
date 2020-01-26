@@ -46,6 +46,7 @@
 
 #include <iostream>
 
+#include "appsettings.h"
 #include "dbuscontainerstate.h"
 #include "imageconverter.h"
 #include "qmlcompositor.h"
@@ -130,6 +131,10 @@ int main(int argc, char *argv[])
     QmlCompositor compositor(view.data(), socket.toStdString().c_str());
     QObject::connect(view.data(), SIGNAL(afterRendering()), &compositor, SLOT(sendCallbacks()));
     view->rootContext()->setContextProperty("compositor", &compositor);
+
+    // application settings
+    AppSettings settings;
+    view->rootContext()->setContextProperty("settings", &settings);
 
     // dbus service
     DBusContainerState dbuscontainer(compositor.window());

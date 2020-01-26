@@ -32,6 +32,7 @@ QT += dbus
 QT += compositor
 
 SOURCES += \
+    src/appsettings.cpp \
     src/dbuscontainerstate.cpp \
     src/imageconverter.cpp \
     src/main.cpp \
@@ -53,6 +54,7 @@ DISTFILES += \
     rpm/flatpak-runner.spec
 
 HEADERS += \
+    src/appsettings.h \
     src/dbuscontainerstate.h \
     src/imageconverter.h \
     src/qmlcompositor.h \
