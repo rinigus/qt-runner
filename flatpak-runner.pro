@@ -42,6 +42,7 @@ SOURCES += \
 OTHER_FILES += \
     qml/main.qml \
     qml/AboutPage.qml \
+    qml/AppSettingsPage.qml \
     qml/MainPage.qml \
     qml/LabelC.qml \
     qml/Python.qml \

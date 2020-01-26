@@ -37,18 +37,75 @@
 
 #include "appsettings.h"
 
+#include <QGuiApplication>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QScreen>
 #include <QSettings>
 
 #include <algorithm>
 
 #define SET_GENERAL "General"
 #define SET_APP "Application "
+#define SETTINGS_VERSION 1
 
 AppSettings::AppSettings(QObject *parent) : QObject(parent)
 {
+  bool setdefaults = false;
+  QSettings settings;
+
+  setdefaults = (setdefaults || settings.value(SET_GENERAL "/version", 0).toInt() < SETTINGS_VERSION);
+  setdefaults = (setdefaults || settings.value(SET_APP + defaultApp() + "/env").toMap().size() == 0);
+
+  if (setdefaults)
+    {
+      QMap<QString, QString> env;
+      env["QT_QUICK_CONTROLS_STYLE"] = "Plasma";
+      env["QT_QUICK_CONTROLS_MOBILE"] = "1";
+      setAppEnv(defaultApp(), env);
+    }
+
+  settings.setValue(SET_GENERAL "/version", SETTINGS_VERSION);
+}
+
+int AppSettings::appDpi(QString flatpak, bool merge) const
+{
+  QSettings settings;
+  int d = settings.value(SET_APP + flatpak + "/dpi", 0).toInt();
+  if (d > 0 || !merge) return d;
+  int s = appScaling(flatpak);
+  if (s > 1) return (int)(defaultDpi() / ((float)s));
+  d = settings.value(SET_APP + defaultApp() + "/dpi", 0).toInt();
+  if (d > 0) return d;
+  return defaultDpi();
+}
+
+QMap<QString, QString> AppSettings::appEnv(QString flatpak, bool merged) const
+{
+  QSettings settings;
+  QMap<QString, QVariant> mv = settings.value(SET_APP + flatpak + "/env").toMap();
+  QMap<QString, QString> m;
+  for (auto i = mv.constBegin(); i != mv.constEnd(); ++i)
+    m.insert(i.key(), i.value().toString());
+  if (flatpak == defaultApp()) return m;
+  if (merged)
+    {
+      QMap<QString, QString> d = appEnv(defaultApp());
+      for (auto i = d.constBegin(); i != d.constEnd(); ++i)
+        if (!m.contains(i.key()))
+          m.insert(i.key(), i.value());
+    }
+  return m;
+}
+
+QString AppSettings::appEnvJson(QString flatpak, bool merged) const
+{
+  QMap<QString, QString> m = appEnv(flatpak, merged);
+  QMap<QString, QVariant> v;
+  for (auto i = m.constBegin(); i != m.constEnd(); ++i)
+    v.insert(i.key(), i.value());
+  return QJsonDocument::fromVariant(v).toJson();
 }
 
 QString AppSettings::appIcon(QString flatpak) const
@@ -63,6 +120,16 @@ QString AppSettings::appName(QString flatpak) const
   return settings.value(SET_APP + flatpak + "/name").toString();
 }
 
+int AppSettings::appScaling(QString flatpak, bool merge) const
+{
+  QSettings settings;
+  int s = settings.value(SET_APP + flatpak + "/scaling", 0).toInt();
+  if (s > 0 || !merge) return s;
+  s = settings.value(SET_APP + defaultApp() + "/scaling", 1).toInt();
+  if (s < 1) s = 1;
+  return s;
+}
+
 QStringList AppSettings::apps() const
 {
   QSettings settings;
@@ -71,6 +138,16 @@ QStringList AppSettings::apps() const
     return appName(a) + a < appName(b) + b;
   });
   return arr;
+}
+
+QString AppSettings::defaultApp() const
+{
+  return "default";
+}
+
+int AppSettings::defaultDpi() const
+{
+  return qGuiApp->primaryScreen()->physicalDotsPerInch();
 }
 
 void AppSettings::updateApps(QString appsInJson)
@@ -92,4 +169,50 @@ void AppSettings::updateApps(QString appsInJson)
   settings.setValue(SET_GENERAL "/applist", applist);
 
   emit appListChanged();
+}
+
+void AppSettings::rmAppEnvVar(QString flatpak, QString name)
+{
+  QMap<QString,QString> e = appEnv(flatpak);
+  if (e.contains(name))
+    {
+      e.remove(name);
+      setAppEnv(flatpak, e);
+    }
+}
+
+void AppSettings::setAppDpi(QString flatpak, int dpi)
+{
+  QSettings settings;
+  if (dpi < 1)
+    {
+      settings.remove(SET_APP + flatpak + "/dpi");
+    }
+  settings.setValue(SET_APP + flatpak + "/dpi", dpi);
+}
+
+void AppSettings::setAppEnv(QString flatpak, QMap<QString, QString> env)
+{
+  QSettings settings;
+  QMap<QString, QVariant> m;
+  for (auto i = env.constBegin(); i != env.constEnd(); ++i)
+    m.insert(i.key(), i.value());
+  settings.setValue(SET_APP + flatpak + "/env", m);
+}
+
+void AppSettings::setAppEnvVar(QString flatpak, QString name, QString value)
+{
+  QMap<QString,QString> e = appEnv(flatpak);
+  e.insert(name, value);
+  setAppEnv(flatpak, e);
+}
+
+void AppSettings::setAppScaling(QString flatpak, int scaling)
+{
+  QSettings settings;
+  if (scaling < 1)
+    {
+      settings.remove(SET_APP + flatpak + "/scaling");
+    }
+  settings.setValue(SET_APP + flatpak + "/scaling", scaling);
 }

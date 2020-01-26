@@ -110,8 +110,14 @@ Page {
                 anchors.topMargin: Theme.paddingSmall
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
-                text: model.flatpak
+                text: model.flatpak !== settings.defaultApp() ? model.flatpak : ""
             }
+
+            onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"),
+                                      {
+                                        "flatpak": model.flatpak,
+                                        "name": model.name
+                                      })
         }
 
         model: ListModel {}
@@ -131,7 +137,7 @@ Page {
             onAppListChanged: {
                 alist.model.clear();
                 alist.model.append({
-                                       'flatpak': 'default',
+                                       'flatpak': settings.defaultApp(),
                                        'name': qsTr('Default settings'),
                                        'icon': Qt.resolvedUrl("../icons/flatpak-runner.svg")
                                    });

@@ -40,6 +40,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QMap>
 
 class AppSettings : public QObject
 {
@@ -47,15 +48,28 @@ class AppSettings : public QObject
 public:
   explicit AppSettings(QObject *parent = nullptr);
 
+  Q_INVOKABLE int appDpi(QString flatpak, bool merge=true) const;
+  Q_INVOKABLE QMap<QString, QString> appEnv(QString flatpak, bool merged=false) const;
+  Q_INVOKABLE QString appEnvJson(QString flatpak, bool merged=false) const;
   Q_INVOKABLE QString appIcon(QString flatpak) const;
   Q_INVOKABLE QString appName(QString flatpak) const;
+  Q_INVOKABLE int appScaling(QString flatpak, bool merge=true) const;
+
   Q_INVOKABLE QStringList apps() const;
+
+  Q_INVOKABLE QString defaultApp() const;
+  Q_INVOKABLE int defaultDpi() const;
+
   Q_INVOKABLE void updateApps(QString appsInJson);
+
+  Q_INVOKABLE void rmAppEnvVar(QString flatpak, QString name);
+  Q_INVOKABLE void setAppDpi(QString flatpak, int dpi);
+  Q_INVOKABLE void setAppEnv(QString flatpak, QMap<QString, QString> env);
+  Q_INVOKABLE void setAppEnvVar(QString flatpak, QString name, QString value);
+  Q_INVOKABLE void setAppScaling(QString flatpak, int scaling);
 
 signals:
   void appListChanged();
-
-public slots:
 };
 
 #endif // APPSETTINGS_H
