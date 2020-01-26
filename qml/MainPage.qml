@@ -45,6 +45,8 @@ Page {
     id: root
     objectName: "mainPage"
 
+    property bool appFinished: false
+    property bool appStarted: false
     property int  nwindows: 0
     property bool settingsInitDone: false
 
@@ -155,27 +157,54 @@ Page {
     }
 
     // Start and end notification
+    Image {
+        anchors.centerIn: busyInd
+        source: settings.appIcon(runner.program)
+        sourceSize.width: busyInd.width / 2
+        visible: !modeSettings && (!appStarted || appFinished)
+    }
+
     Label {
         id: hintLabel
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: busyInd.bottom
+        anchors.topMargin: Theme.paddingLarge
         font.pixelSize: Theme.fontSizeLarge
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         text: {
-            if (runner.program && hintLabel.status)
-                return qsTr("Flatpak: %1\n%2").arg(runner.program).arg(hintLabel.status);
-            if (runner.program)
-                return qsTr("Flatpak: %1").arg(runner.program);
-            return qsTr("Flatpak Runner");
+            var name = settings.appName(runner.program);
+            if (name && hintLabel.status)
+                return "%1\n%2".arg(name).arg(hintLabel.status);
+            if (name)
+                return name;
+            return "";
         }
-        visible: nwindows <= 0 && !modeSettings
+        visible: (appFinished || !appStarted) && !modeSettings
         width: root.width - 2*Theme.horizontalPageMargin
         wrapMode: Text.WordWrap
 
         property string status
-        Connections {
-            target: runner
-            onExit: hintLabel.status = qsTr("Application finished")
+    }
+
+    Connections {
+        target: runner
+        onExit: {
+            hintLabel.status = qsTr("Application finished");
+            appFinished = true;
+        }
+    }
+
+    Component.onCompleted: {
+        if (!modeSettings) {
+            busyInd.running = true;
+        }
+    }
+
+    onNwindowsChanged: {
+        if (nwindows > 0) {
+            appStarted = true;
+            busyInd.running = false;
         }
     }
 
@@ -221,7 +250,7 @@ Page {
         windowContainer.child.anchors.fill = windowContainer;
         windowContainer.child.touchEventsEnabled = true;
 
-        nwindows += 1
+        nwindows += 1;
 
         windowContainer.child.takeFocus()
     }
