@@ -69,11 +69,11 @@ AppSettings::AppSettings(QObject *parent) : QObject(parent)
   settings.setValue(SET_GENERAL "/version", SETTINGS_VERSION);
 }
 
-int AppSettings::appDpi(QString flatpak, bool merge) const
+int AppSettings::appDpi(QString flatpak, bool merged) const
 {
   QSettings settings;
   int d = settings.value(SET_APP + flatpak + "/dpi", 0).toInt();
-  if (d > 0 || !merge) return d;
+  if (d > 0 || !merged) return d;
   int s = appScaling(flatpak);
   if (s > 1) return (int)(defaultDpi() / ((float)s));
   d = settings.value(SET_APP + defaultApp() + "/dpi", 0).toInt();
@@ -120,11 +120,11 @@ QString AppSettings::appName(QString flatpak) const
   return settings.value(SET_APP + flatpak + "/name").toString();
 }
 
-int AppSettings::appScaling(QString flatpak, bool merge) const
+int AppSettings::appScaling(QString flatpak, bool merged) const
 {
   QSettings settings;
   int s = settings.value(SET_APP + flatpak + "/scaling", 0).toInt();
-  if (s > 0 || !merge) return s;
+  if (s > 0 || !merged) return s;
   s = settings.value(SET_APP + defaultApp() + "/scaling", 1).toInt();
   if (s < 1) s = 1;
   return s;

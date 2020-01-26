@@ -88,7 +88,7 @@ Dialog {
                 }
 
                 Component.onCompleted: {
-                    var s = settings.appScaling(flatpak, false);
+                    var s = settings.appScaling(flatpak);
                     if (s < 1) {
                         scsw.checked = false;
                         scval.value = 1;
@@ -134,7 +134,7 @@ Dialog {
                 }
 
                 Component.onCompleted: {
-                    var s = settings.appDpi(flatpak, false);
+                    var s = settings.appDpi(flatpak);
                     if (s < 1) {
                         dpisw.checked = false;
                         dpival.value = Math.round(settings.defaultDpi() /

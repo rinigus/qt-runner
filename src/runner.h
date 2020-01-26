@@ -43,6 +43,8 @@
 #include <QString>
 #include <QStringList>
 
+#include "appsettings.h"
+
 class Runner : public QObject
 {
   Q_OBJECT
@@ -50,7 +52,9 @@ class Runner : public QObject
   Q_PROPERTY(QString program READ program NOTIFY programChanged)
 
 public:
-  Runner(QString program, QStringList flatpak_options, QStringList program_options, QString wayland_socket, QString dbusaddress);
+  Runner(QString program, QStringList flatpak_options,
+         QStringList program_options, QString wayland_socket,
+         QString dbusaddress, AppSettings &appsettings);
 
   Q_INVOKABLE void start();
   QString program() const { return m_flatpak_program; }

@@ -35,8 +35,6 @@
 **
 ****************************************************************************/
 
-#include <QGuiApplication>
-#include <QScreen>
 #include <QSettings>
 #include <QProcessEnvironment>
 
@@ -47,7 +45,8 @@
 #include <QDebug>
 
 
-Runner::Runner(QString program, QStringList flatpak_options, QStringList program_options, QString wayland_socket, QString dbusaddress)
+Runner::Runner(QString program, QStringList flatpak_options, QStringList program_options,
+               QString wayland_socket, QString dbusaddress, AppSettings &appsettings)
 {
   if (program.isEmpty())
     return; // nothing to do
@@ -55,7 +54,7 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   QString fc = "flatpak";
   QStringList fo;
 
-  QSettings settings;
+  QSettings qset;
 
   // run command
   fo << "run";
@@ -67,18 +66,13 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   if (!env.contains("FLATPAK_GL_DRIVERS"))
     env.insert("FLATPAK_GL_DRIVERS", "host");
 
-  // dpi
-  double dpi = qGuiApp->primaryScreen()->physicalDotsPerInch();
-  std::cout << "Screen DPI: " << dpi << "\n";
-
-  double dpiSet = settings.value("main/dpi", -1).toDouble();
-  if (dpiSet > 0)
-    {
-      dpi = dpiSet;
-      std::cout << "Screen DPI overwritten via settings: " << dpi << "\n";
-    }
-
-  fo << QString("--env=QT_WAYLAND_FORCE_DPI=%1").arg(int(dpi));
+  // dpi and scaling factor
+  fo << QString("--env=QT_WAYLAND_FORCE_DPI=%1").arg(appsettings.appDpi(program, true));
+  {
+    int scale = appsettings.appScaling(program, true);
+    if (scale > 1)
+      fo << QString("--env=QT_SCALE_FACTOR=%1").arg(scale);
+  }
 
   // filesystems
   fo << "--filesystem=/system:ro"
@@ -96,9 +90,10 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   fo << "--filesystem=/opt/flatpak/maliit/org.kde.Platform/arm/5.12:ro"
      << "--env=QT_PLUGIN_PATH=/app/lib64/plugins:/app/lib/plugins:/usr/share/runtime/lib/plugins:/opt/flatpak/maliit/org.kde.Platform/arm/5.12";
 
-  // Set default Qt Quick Controls style
-  fo << "--env=QT_QUICK_CONTROLS_STYLE=Plasma"
-     << "--env=QT_QUICK_CONTROLS_MOBILE=1";
+  // Set environment variables
+  QMap<QString,QString> fpkenv = appsettings.appEnv(program, true);
+  for (auto i=fpkenv.constBegin(); i!=fpkenv.constEnd(); ++i)
+    fo << "--env=" + i.key() + "=" + i.value();
 
 //  // libhybris
 //  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/var/run/host/usr/lib/libhybris"
@@ -118,8 +113,8 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
 //  fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
 
 //  // set LD_LIBRARY_PATH to the used extension
-//  if (settings.value("main/set_ld_path", 1).toInt() > 0)
-//    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
+//  if (qset.value("main/set_ld_path", 1).toInt() > 0)
+//    fo << "--env=LD_LIBRARY_PATH=" + qset.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
 
   // libhybris
   fo << "--env=HYBRIS_EGLPLATFORM_DIR=/usr/lib/arm-linux-gnueabihf/GL/host/lib/libhybris"
@@ -134,8 +129,9 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
 
   // set LD_LIBRARY_PATH to the used extension
-  if (settings.value("main/set_ld_path", 1).toInt() > 0)
-    fo << "--env=LD_LIBRARY_PATH=" + settings.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
+  if (qset.value("main/set_ld_path", 1).toInt() > 0)
+    fo << "--env=LD_LIBRARY_PATH=" + qset.value("main/ld_library_path",
+                                                "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
 
   // add supplied flatpak options in the end
   fo << flatpak_options;

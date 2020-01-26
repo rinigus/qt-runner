@@ -48,12 +48,12 @@ class AppSettings : public QObject
 public:
   explicit AppSettings(QObject *parent = nullptr);
 
-  Q_INVOKABLE int appDpi(QString flatpak, bool merge=true) const;
+  Q_INVOKABLE int appDpi(QString flatpak, bool merged=false) const;
   Q_INVOKABLE QMap<QString, QString> appEnv(QString flatpak, bool merged=false) const;
   Q_INVOKABLE QString appEnvJson(QString flatpak, bool merged=false) const;
   Q_INVOKABLE QString appIcon(QString flatpak) const;
   Q_INVOKABLE QString appName(QString flatpak) const;
-  Q_INVOKABLE int appScaling(QString flatpak, bool merge=true) const;
+  Q_INVOKABLE int appScaling(QString flatpak, bool merged=false) const;
 
   Q_INVOKABLE QStringList apps() const;
 

@@ -140,7 +140,8 @@ int main(int argc, char *argv[])
     DBusContainerState dbuscontainer(compositor.window());
 
     // runner
-    Runner runner(program, flatpak_options, program_options, socket, dbuscontainer.address());
+    Runner runner(program, flatpak_options, program_options, socket,
+                  dbuscontainer.address(), settings);
     view->rootContext()->setContextProperty("runner", &runner);
 
     // image converter
