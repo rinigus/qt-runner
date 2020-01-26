@@ -19,7 +19,7 @@ BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5Compositor)
-
+BuildRequires:  pkgconfig(Qt5Svg)
 
 %description
 Wrapper for running Flatpak apps on Sailfish.
