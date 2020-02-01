@@ -195,8 +195,16 @@ Page {
     Connections {
         target: runner
         onExit: {
-            hintLabel.status = qsTr("Application finished");
+            if (runner.crashed)
+                hintLabel.status = qsTr("Application crashed");
+            else {
+                if (runner.exitCode)
+                    hintLabel.status = qsTr("Application finished with exit code %1").arg(runner.exitCode);
+                else
+                    hintLabel.status = qsTr("Application finished");
+            }
             appFinished = true;
+            busyInd.running = false;
         }
     }
 

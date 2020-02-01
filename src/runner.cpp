@@ -46,7 +46,8 @@
 
 
 Runner::Runner(QString program, QStringList flatpak_options, QStringList program_options,
-               QString wayland_socket, QString dbusaddress, AppSettings &appsettings)
+               QString wayland_socket, QString dbusaddress, AppSettings &appsettings):
+  m_crashed(false), m_exitCode(0)
 {
   if (program.isEmpty())
     return; // nothing to do
@@ -159,6 +160,7 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   m_command = fc;
   m_options = fo;
   m_flatpak_program = program;
+  emit programChanged(m_flatpak_program);
 }
 
 void Runner::start()
@@ -172,11 +174,25 @@ void Runner::onError(QProcess::ProcessError /*error*/)
   std::cerr << m_process->errorString().toStdString() << "\n";
 }
 
-void Runner::onFinished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
+void Runner::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
   onStdErr();
   onStdOut();
-  exit();
+
+  bool c = (exitStatus == QProcess::CrashExit);
+  if (m_crashed != c)
+    {
+      m_crashed = c;
+      emit crashedChanged(m_crashed);
+    }
+
+  if (m_exitCode != exitCode)
+    {
+      m_exitCode = exitCode;
+      emit exitCodeChanged(m_exitCode);
+    }
+
+  emit exit();
 }
 
 void Runner::onStdErr()

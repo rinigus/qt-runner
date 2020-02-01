@@ -49,6 +49,8 @@ class Runner : public QObject
 {
   Q_OBJECT
 
+  Q_PROPERTY(bool crashed READ crashed NOTIFY crashedChanged)
+  Q_PROPERTY(int  exitCode READ exitCode NOTIFY exitCodeChanged)
   Q_PROPERTY(QString program READ program NOTIFY programChanged)
 
 public:
@@ -57,15 +59,21 @@ public:
          QString dbusaddress, AppSettings &appsettings);
 
   Q_INVOKABLE void start();
+
+  bool crashed() const { return m_crashed; }
+  int  exitCode() const { return m_exitCode; }
   QString program() const { return m_flatpak_program; }
 
 signals:
   void programChanged(QString program);
+  void crashedChanged(bool crashed);
+  void exitCodeChanged(int exitCode);
+
   void exit();
 
 protected:
   void onError(QProcess::ProcessError error);
-  void onFinished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/);
+  void onFinished(int /*exitCode*/, QProcess::ExitStatus exitStatus);
   void onStdOut();
   void onStdErr();
 
@@ -73,6 +81,8 @@ protected:
   QProcess   *m_process = nullptr;
   QString     m_flatpak_program;
   QString     m_command;
+  bool        m_crashed;
+  int         m_exitCode;
   QStringList m_options;
 };
 
