@@ -15,7 +15,6 @@ Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   rsync
 Requires:   flatpak
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.5.1
-Requires:   libhybris >= 0.0.5.34
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
