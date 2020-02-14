@@ -260,8 +260,13 @@ Page {
         windowContainer.objectName = "windowContainer"
         windowContainer.child.resizeSurfaceToItem = true
         windowContainer.child.parent = windowContainer;
-        windowContainer.child.anchors.fill = windowContainer;
+        // workaround against html select - better solution is needed [TODO]
+        if (nwindows == 0) windowContainer.child.anchors.fill = windowContainer;
         windowContainer.child.touchEventsEnabled = true;
+
+//        console.log("New window: " + windowContainer.child + " " +
+//                    windowContainer.child.width + " x " + windowContainer.child.height + " / " +
+//                    windowContainer.child.x + " , " + windowContainer.child.y)
 
         nwindows += 1;
 
@@ -275,7 +280,8 @@ Page {
 
     function removeWindow(window) {
         window.destroy();
-        nwindows -= 1
+        nwindows -= 1;
+//        console.log("Window destroyed")
     }
 }
 
