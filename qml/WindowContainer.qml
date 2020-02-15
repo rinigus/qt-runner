@@ -45,7 +45,7 @@ import QtCompositor 1.0
 Item {
     id: container
     anchors.fill: parent
-    anchors.bottomMargin: keyboardHeight.height
+    anchors.bottomMargin: followKeyboard ? keyboardHeight.height : 0
     z: 1
 
     property variant child: null // qwaylandsurfaceitem

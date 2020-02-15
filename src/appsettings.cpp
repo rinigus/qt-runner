@@ -108,6 +108,14 @@ QString AppSettings::appEnvJson(QString flatpak, bool merged) const
   return QJsonDocument::fromVariant(v).toJson();
 }
 
+int AppSettings::appFollowKeyboard(QString flatpak, bool merged) const
+{
+  QSettings settings;
+  int d = settings.value(SET_APP + flatpak + "/followKeyboard", -1).toInt();
+  if (d >= 0 || (!merged && flatpak != defaultApp())) return d;
+  return settings.value(SET_APP + defaultApp() + "/followKeyboard", 0).toInt();
+}
+
 QString AppSettings::appIcon(QString flatpak) const
 {
   QSettings settings;
@@ -205,6 +213,12 @@ void AppSettings::setAppEnvVar(QString flatpak, QString name, QString value)
   QMap<QString,QString> e = appEnv(flatpak);
   e.insert(name, value);
   setAppEnv(flatpak, e);
+}
+
+void AppSettings::setAppFollowKeyboard(QString flatpak, int follow)
+{
+  QSettings settings;
+  settings.setValue(SET_APP + flatpak + "/followKeyboard", follow);
 }
 
 void AppSettings::setAppScaling(QString flatpak, int scaling)

@@ -153,6 +153,11 @@ int main(int argc, char *argv[])
     ImageConverter imageconv;
     view->rootContext()->setContextProperty("imageConverter", &imageconv);
 
+    // whether the app is configured to reduce wayland server window
+    // when keyboard is shown
+    bool followKeyboard = settings.appFollowKeyboard(program, true);
+    view->rootContext()->setContextProperty("followKeyboard", followKeyboard);
+
     // whether settings are allowed and misc variables
     view->rootContext()->setContextProperty("modeSettings", !run);
     view->rootContext()->setContextProperty("programVersion", APP_VERSION);

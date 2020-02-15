@@ -156,6 +156,65 @@ Dialog {
                 }
             }
 
+            Column {
+                // follow keyboard switch
+                spacing: Theme.paddingMedium
+                width: alist.width
+
+                TextSwitch {
+                    id: keyoversw
+                    text: qsTr("Override keyboard handling")
+                    description: qsTr("Override default keyboard handling.")
+                }
+
+                TextSwitch {
+                    id: keysw
+                    enabled: keyoversw.checked
+                    text: qsTr("Reduce window when keyboard is shown")
+                    description: qsTr("When enabled, surface showing the application is reduced to ensure that the keyboard does not " +
+                                      "cover the application parts. This is sometimes needed in some of the applications. However, it may " +
+                                      "cause temporary distortion in the shown window due to rescaling of the window before the application " +
+                                      "catches up and redraws the window.")
+                }
+
+                Component.onCompleted: {
+                    var s = settings.appFollowKeyboard(flatpak);
+
+                    if (flatpak == settings.defaultApp()) {
+                        keyoversw.checked = true;
+                        keyoversw.visible = false;
+                        if (s < 1)
+                            keysw.checked = false;
+                        else
+                            keysw.checked = true;
+                        return;
+                    }
+
+                    if (s < 0) {
+                        keyoversw.checked = false;
+                        keysw.checked = (settings.appFollowKeyboard(settings.defaultApp()) > 0);
+                    } else if (s == 0) {
+                        keyoversw.checked = true;
+                        keysw.checked = false;
+                    } else {
+                        keyoversw.checked = true;
+                        keysw.checked = true;
+                    }
+                }
+
+                Connections {
+                    target: dia
+                    onAccepted: {
+                        var s = 0;
+                        if (!keyoversw.checked)
+                            s = -1;
+                        else if (keysw.checked)
+                            s = 1;
+                        settings.setAppFollowKeyboard(flatpak, s);
+                    }
+                }
+            }
+
             Repeater {
                 id: env
                 delegate: ListItem {

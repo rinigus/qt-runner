@@ -51,6 +51,7 @@ public:
   Q_INVOKABLE int appDpi(QString flatpak, bool merged=false) const;
   Q_INVOKABLE QMap<QString, QString> appEnv(QString flatpak, bool merged=false) const;
   Q_INVOKABLE QString appEnvJson(QString flatpak, bool merged=false) const;
+  Q_INVOKABLE int appFollowKeyboard(QString flatpak, bool merged=false) const;
   Q_INVOKABLE QString appIcon(QString flatpak) const;
   Q_INVOKABLE QString appName(QString flatpak) const;
   Q_INVOKABLE int appScaling(QString flatpak, bool merged=false) const;
@@ -66,6 +67,7 @@ public:
   Q_INVOKABLE void setAppDpi(QString flatpak, int dpi);
   Q_INVOKABLE void setAppEnv(QString flatpak, QMap<QString, QString> env);
   Q_INVOKABLE void setAppEnvVar(QString flatpak, QString name, QString value);
+  Q_INVOKABLE void setAppFollowKeyboard(QString flatpak, int follow);
   Q_INVOKABLE void setAppScaling(QString flatpak, int scaling);
 
 signals:
