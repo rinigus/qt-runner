@@ -49,6 +49,7 @@
 #include "appsettings.h"
 #include "dbuscontainerstate.h"
 #include "imageconverter.h"
+#include "keyboardheight.h"
 #include "qmlcompositor.h"
 #include "runner.h"
 
@@ -136,8 +137,12 @@ int main(int argc, char *argv[])
     AppSettings settings;
     view->rootContext()->setContextProperty("settings", &settings);
 
+    // keyboard rectangle follower
+    KeyboardHeight keyheight;
+    view->rootContext()->setContextProperty("keyboardHeight", &keyheight);
+
     // dbus service
-    DBusContainerState dbuscontainer(compositor.window());
+    DBusContainerState dbuscontainer(compositor.window(), &keyheight);
 
     // runner
     Runner runner(program, flatpak_options, program_options, socket,

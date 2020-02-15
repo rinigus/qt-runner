@@ -7,8 +7,8 @@
 #include <QDebug>
 
 
-DBusContainerState::DBusContainerState(const QWindow *window):
-  QObject(), m_window(window)
+DBusContainerState::DBusContainerState(const QWindow *window, KeyboardHeight *kh):
+  QObject(), m_window(window), m_keyboardHeight(kh)
 {
   // follow application state
   connect(qGuiApp, &QGuiApplication::applicationStateChanged, this, &DBusContainerState::onActiveState);
@@ -53,6 +53,17 @@ bool DBusContainerState::activeState() const
 }
 
 
+void DBusContainerState::keyboardRect(bool active, int /*x*/, int /*y*/, int width, int height)
+{
+  if (!active)
+    m_keyboardHeight->setHeight(0);
+  else
+    {
+      if (m_orientation == 90 || m_orientation == 270) m_keyboardHeight->setHeight(width);
+      else m_keyboardHeight->setHeight(height);
+    }
+}
+
 void DBusContainerState::onActiveState(Qt::ApplicationState state)
 {
   bool s = (state == Qt::ApplicationActive);
@@ -72,6 +83,6 @@ void DBusContainerState::onWindowOrientationChanged(Qt::ScreenOrientation orient
 void DBusContainerState::onNewConnection(const QDBusConnection &c)
 {
   QDBusConnection connection(c);
-  connection.registerObject("/", this, QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
+  connection.registerObject("/", this, QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots);
   connection.registerService(FLATPAK_RUNNER_DBUS_CONT_SERVICE);
 }

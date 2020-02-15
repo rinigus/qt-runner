@@ -35,6 +35,7 @@ SOURCES += \
     src/appsettings.cpp \
     src/dbuscontainerstate.cpp \
     src/imageconverter.cpp \
+    src/keyboardheight.cpp \
     src/main.cpp \
     src/qmlcompositor.cpp \
     src/runner.cpp
@@ -59,6 +60,7 @@ HEADERS += \
     src/appsettings.h \
     src/dbuscontainerstate.h \
     src/imageconverter.h \
+    src/keyboardheight.h \
     src/qmlcompositor.h \
     src/runner.h
 
