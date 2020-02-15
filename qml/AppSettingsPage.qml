@@ -138,7 +138,7 @@ Dialog {
                     if (s < 1) {
                         dpisw.checked = false;
                         dpival.value = Math.round(settings.defaultDpi() /
-                                                  settings.appScaling(flatpak));
+                                                  Math.max(1,settings.appScaling(flatpak)));
                     } else {
                         dpisw.checked = true;
                         dpival.value = Math.min(s, dpival.maximumValue);
