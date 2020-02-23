@@ -48,7 +48,7 @@
 
 #define SET_GENERAL "General"
 #define SET_APP "Application "
-#define SETTINGS_VERSION 1
+#define SETTINGS_VERSION 2
 
 AppSettings::AppSettings(QObject *parent) : QObject(parent)
 {
@@ -63,6 +63,7 @@ AppSettings::AppSettings(QObject *parent) : QObject(parent)
       QMap<QString, QString> env;
       env["QT_QUICK_CONTROLS_STYLE"] = "Plasma";
       env["QT_QUICK_CONTROLS_MOBILE"] = "1";
+      env["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu-compositing";
       setAppEnv(defaultApp(), env);
     }
 
