@@ -67,6 +67,10 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   if (!env.contains("FLATPAK_GL_DRIVERS"))
     env.insert("FLATPAK_GL_DRIVERS", "host");
 
+  // drop QMLSCENE_DEVICE="customcontext" as we don't have it in environment
+  if (env.value("QMLSCENE_DEVICE") == "customcontext")
+    env.remove("QMLSCENE_DEVICE");
+
   // dpi and scaling factor
   fo << QString("--env=QT_WAYLAND_FORCE_DPI=%1").arg(appsettings.appDpi(program, true));
   {
