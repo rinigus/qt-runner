@@ -68,7 +68,7 @@ AppSettings::AppSettings(QObject *parent) : QObject(parent)
       // Flags are based on workaround for SFOS (disable-gpu-compositing) and default Android settings:
       //   Multiple Raster Threads: Disabled
       //   Flags enabled by Qt if enable-embedded-switches is given
-      env["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu-compositing --num-raster-threads=1 --enable-viewport --main-frame-resizes-are-orientation-changes --disable-composited-antialiasing";
+      env["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu-compositing --num-raster-threads=1 --enable-viewport --disable-composited-antialiasing";
       setAppEnv(defaultApp(), env);
     }
 
