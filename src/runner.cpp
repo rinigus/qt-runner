@@ -90,11 +90,6 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   // keyboard
   fo << "--talk-name=org.maliit.server";
 
-  // temporary location for maliit plugin
-  // TODO make it as KDE runtime extension
-  fo << "--filesystem=/opt/flatpak/maliit/org.kde.Platform/arm/5.12:ro"
-     << "--env=QT_PLUGIN_PATH=/app/lib64/plugins:/app/lib/plugins:/usr/share/runtime/lib/plugins:/opt/flatpak/maliit/org.kde.Platform/arm/5.12";
-
   // Set environment variables
   QMap<QString,QString> fpkenv = appsettings.appEnv(program, true);
   for (auto i=fpkenv.constBegin(); i!=fpkenv.constEnd(); ++i)
