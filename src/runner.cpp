@@ -35,6 +35,7 @@
 **
 ****************************************************************************/
 
+#include <QFileInfo>
 #include <QSettings>
 #include <QProcessEnvironment>
 
@@ -72,7 +73,7 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
     env.remove("QMLSCENE_DEVICE");
 
   // dpi and scaling factor
-  fo << QString("--env=QT_WAYLAND_FORCE_DPI=%1").arg(appsettings.appDpi(program, true));
+  fo << QStringLiteral("--env=QT_WAYLAND_FORCE_DPI=%1").arg(appsettings.appDpi(program, true));
   {
     int scale = appsettings.appScaling(program, true);
     if (scale > 1)
@@ -80,9 +81,15 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   }
 
   // filesystems
-  fo << "--filesystem=/system:ro"
-     << "--filesystem=/vendor:ro"
-     << "--filesystem=/odm:ro";
+  QStringList filesys;
+  filesys << QLatin1String("/system")
+          << QLatin1String("/vendor")
+          << QLatin1String("/odm")
+          << QLatin1String("/plat_property_contexts")
+          << QLatin1String("/nonplat_property_contexts");
+  for (const auto &fs: filesys)
+    if (QFileInfo::exists(fs))
+      fo << QStringLiteral("--filesystem=%1:ro").arg(fs);
 
   // devices
   fo << "--device=all";
