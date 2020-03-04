@@ -37,18 +37,31 @@
 
 #include "appsettings.h"
 
+#include <QDebug>
+#include <QDir>
+#include <QFile>
 #include <QGuiApplication>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QScreen>
 #include <QSettings>
+#include <QStandardPaths>
 
 #include <algorithm>
 
 #define SET_GENERAL "General"
 #define SET_APP "Application "
 #define SETTINGS_VERSION 3
+
+// sync with AppSettingsPage.qml
+#define THEME_IGNORE  0 // use default
+#define THEME_AUTO    1
+#define THEME_LIGHT   2
+#define THEME_DARK    3
+#define THEME_MANUAL -1
+#define THEME_MIN_VALUE THEME_MANUAL
+#define THEME_MAX_VALUE THEME_DARK
 
 AppSettings::AppSettings(QObject *parent) : QObject(parent)
 {
@@ -144,6 +157,15 @@ int AppSettings::appScaling(QString flatpak, bool merged) const
   return s;
 }
 
+int AppSettings::appTheme(QString flatpak, bool merged) const
+{
+  QSettings settings;
+  int s = settings.value(SET_APP + flatpak + "/theme", THEME_IGNORE).toInt();
+  if (s != THEME_IGNORE || (!merged && flatpak != defaultApp())) return s;
+  s = settings.value(SET_APP + defaultApp() + "/theme", THEME_AUTO).toInt();
+  return s;
+}
+
 QStringList AppSettings::apps() const
 {
   QSettings settings;
@@ -235,4 +257,50 @@ void AppSettings::setAppScaling(QString flatpak, int scaling)
       settings.remove(SET_APP + flatpak + "/scaling");
     }
   settings.setValue(SET_APP + flatpak + "/scaling", scaling);
+}
+
+void AppSettings::setAppTheme(QString flatpak, int theme)
+{
+  if (theme >= THEME_MIN_VALUE && theme <= THEME_MAX_VALUE)
+    {
+      QSettings settings;
+      settings.setValue(SET_APP + flatpak + "/theme", theme);
+    }
+}
+
+void AppSettings::setDark(bool dark)
+{
+  if (dark == m_dark) return;
+  m_dark = dark;
+  emit darkChanged();
+}
+
+void AppSettings::applyTheme(QString flatpak)
+{
+  if (flatpak.isEmpty()) return;
+
+  int theme = appTheme(flatpak, true);
+  if (theme == THEME_MANUAL) return;
+  if (theme == THEME_AUTO) theme = m_dark ? THEME_DARK : THEME_LIGHT;
+
+  if (theme != THEME_DARK && theme != THEME_LIGHT)
+    {
+      qWarning() << "Unsupported theme ID" << theme;
+      return;
+    }
+
+  QDir dir = QDir::home();
+  QString path = QStringLiteral(".var/app/%1/config").arg(flatpak);
+  dir.mkpath(path);
+  dir.cd(path);
+  QFile file(dir.absoluteFilePath("kdeglobals"));
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+      qWarning() << "Failed to open file:" << file.fileName();
+      return;
+    }
+
+  QTextStream txt(&file);
+  if (theme == THEME_DARK) txt << QLatin1String("[Theme]\nname=breeze-dark\n");
+  if (theme == THEME_LIGHT) txt << QLatin1String("[Theme]\nname=default\n");
 }

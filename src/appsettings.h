@@ -45,6 +45,9 @@
 class AppSettings : public QObject
 {
   Q_OBJECT
+
+  Q_PROPERTY(bool dark READ dark WRITE setDark NOTIFY darkChanged)
+
 public:
   explicit AppSettings(QObject *parent = nullptr);
 
@@ -55,6 +58,7 @@ public:
   Q_INVOKABLE QString appIcon(QString flatpak) const;
   Q_INVOKABLE QString appName(QString flatpak) const;
   Q_INVOKABLE int appScaling(QString flatpak, bool merged=false) const;
+  Q_INVOKABLE int appTheme(QString flatpak, bool merged=false) const;
 
   Q_INVOKABLE QStringList apps() const;
 
@@ -69,9 +73,19 @@ public:
   Q_INVOKABLE void setAppEnvVar(QString flatpak, QString name, QString value);
   Q_INVOKABLE void setAppFollowKeyboard(QString flatpak, int follow);
   Q_INVOKABLE void setAppScaling(QString flatpak, int scaling);
+  Q_INVOKABLE void setAppTheme(QString flatpak, int theme);
+
+  Q_INVOKABLE void applyTheme(QString flatpak);
+
+  bool dark() const { return m_dark; }
+  void setDark(bool dark);
 
 signals:
   void appListChanged();
+  void darkChanged();
+
+protected:
+  bool m_dark = true;
 };
 
 #endif // APPSETTINGS_H

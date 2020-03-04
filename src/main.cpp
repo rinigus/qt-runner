@@ -170,7 +170,6 @@ int main(int argc, char *argv[])
 
     view->show();
     app->processEvents();
-    runner.start();
 
     return app->exec();
 }
