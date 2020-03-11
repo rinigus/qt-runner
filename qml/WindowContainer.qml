@@ -42,24 +42,64 @@ import Sailfish.Silica 1.0
 import QtQuick.Window 2.0
 import QtCompositor 1.0
 
-Item {
+MouseArea {
     id: container
+    objectName: "windowContainer"
     anchors.fill: parent
     anchors.bottomMargin: followKeyboard ? keyboardHeight.height : 0
     z: 1
 
     property variant child: null // qwaylandsurfaceitem
+    property bool popup: false
 
     Component.onCompleted: {
-        // always set component as a fullscreen if there is none
-        if (!compositor.fullscreenSurface)
-            compositor.fullscreenSurface = child.surface
+        if (popup) {
+            child.parent = popupContainer;
+            popupContainer.width = child.width
+            popupContainer.height = child.height
+        } else {
+            child.parent = container;
+            child.resizeSurfaceToItem = true
+            child.anchors.fill = container
+            child.touchEventsEnabled = true
+            child.takeFocus()
+        }
+    }
+
+    function close() {
+        visible = false
+        container.parent.removeWindow(container)
+    }
+
+    onPressed: {
+        if (popup) {
+            close()
+        }
+    }
+
+    onFocusChanged: {
+        if (popup && !focus) {
+            close()
+        }
     }
 
     Connections {
         target: container.child ? container.child.surface : null
 
-        onUnmapped: container.parent.removeWindow(container)
-        onSurfaceDestroyed: container.parent.removeWindow(container)
+        onUnmapped: close()
+        onSurfaceDestroyed: close()
+        onDamaged: {
+            if (popup) {
+                popupContainer.width = child.width
+                popupContainer.height = child.height
+            }
+        }
+    }
+
+    Item {
+        id: popupContainer
+        anchors.centerIn: parent
+        width: 100
+        height: 100
     }
 }
