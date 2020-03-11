@@ -255,22 +255,15 @@ Page {
         }
 
         var windowContainer = windowContainerComponent.createObject(root, {
-                                                                        "child": compositor.item(window)
+                                                                        child: compositor.item(window),
+                                                                        popup: nwindows > 0
                                                                     });
-        windowContainer.objectName = "windowContainer"
-        windowContainer.child.resizeSurfaceToItem = true
-        windowContainer.child.parent = windowContainer;
-        // workaround against html select - better solution is needed [TODO]
-        if (nwindows == 0) windowContainer.child.anchors.fill = windowContainer;
-        windowContainer.child.touchEventsEnabled = true;
 
 //        console.log("New window: " + windowContainer.child + " " +
 //                    windowContainer.child.width + " x " + windowContainer.child.height + " / " +
 //                    windowContainer.child.x + " , " + windowContainer.child.y)
 
         nwindows += 1;
-
-        windowContainer.child.takeFocus()
     }
 
     function windowResized(window) {
