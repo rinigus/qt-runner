@@ -19,7 +19,7 @@ isEmpty(PREFIX) {
 
 target.path = $$PREFIX/bin
 
-CONFIG += sailfishapp
+CONFIG += sailfishapp sailfishapp_i18n
 
 DEFINES += QT_COMPOSITOR_QUICK
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"

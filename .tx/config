@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[flatpak-runner.ts]
+file_filter = translations/flatpak-runner-<lang>.ts
+source_file = translations/flatpak-runner.ts
+source_lang = en
+type = QT
+
