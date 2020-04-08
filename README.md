@@ -58,6 +58,11 @@ In part, the limitations are imposed by old QtWayland (5.4) available
 on Sailfish.
 
 
+## Translations
+
+Please use Transifex project for translations: https://www.transifex.com/rinigus/flatpak-runner/
+
+
 ## Acknowledgments
 
 The code is based on QtWayland [example
