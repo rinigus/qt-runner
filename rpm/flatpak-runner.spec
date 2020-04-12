@@ -5,7 +5,7 @@ Name:       flatpak-runner
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Flatpak runner
-Version:    0.8.0
+Version:    0.8.1
 Release:    1
 Group:      Qt/Qt
 License:    BSD-3
