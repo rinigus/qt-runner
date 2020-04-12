@@ -78,3 +78,10 @@ INSTALLS += icons
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172 256x256
 DISTFILES += $${TARGET}.desktop
+
+# translations
+TRANSLATIONS += \
+    translations/$${TARGET}-de_DE.ts \
+    translations/$${TARGET}-es.ts \
+    translations/$${TARGET}-sv.ts \
+    translations/$${TARGET}-zh_CN.ts
