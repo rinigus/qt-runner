@@ -5,7 +5,7 @@ class Desktop:
     def __init__(self, fname):
         self.config = configparser.ConfigParser()
         self.config.optionxform = str
-        self.config.read(fname)
+        self.config.read(fname, encoding='utf8')
         self.icon_path = 'flatpak-runner'
 
     @property
@@ -31,7 +31,7 @@ class Desktop:
         nc['Desktop Entry']['Icon'] = self.icon_path
         nc['Desktop Entry']['X-Nemo-Single-Instance']='no'
         nc['Desktop Entry']['X-Nemo-Application-Type']='no-invoker'
-        with open(fname, 'w') as f:
+        with open(fname, 'w', encoding='utf8') as f:
             nc.write(f)
 
     def set_icon_path(self, path):
