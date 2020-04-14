@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[flatpak-runner.ts]
+[flatpak-runner.flatpak-runnerts]
 file_filter = translations/flatpak-runner-<lang>.ts
 source_file = translations/flatpak-runner.ts
 source_lang = en
