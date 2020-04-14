@@ -83,5 +83,6 @@ DISTFILES += $${TARGET}.desktop
 TRANSLATIONS += \
     translations/$${TARGET}-de_DE.ts \
     translations/$${TARGET}-es.ts \
+    translations/$${TARGET}-fi.ts \
     translations/$${TARGET}-sv.ts \
     translations/$${TARGET}-zh_CN.ts
