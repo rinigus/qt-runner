@@ -295,18 +295,45 @@ Dialog {
 
                         TextField {
                             id: name
-                            anchors.horizontalCenter: parent.horizontalCenter
                             label: qsTr("Name")
+                            placeholderText: label
                             text: model.key
-                            width: parent.width - 2*Theme.horizontalPageMargin
+                            width: parent.width
+                            errorHighlight: !focus && !text
+                            EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                            EnterKey.onClicked: {
+                                if (!text) {
+                                    return
+                                }
+
+                                value.forceActiveFocus()
+                            }
+
+                            Component.onCompleted: {
+                                forceActiveFocus()
+                            }
                         }
 
                         TextField {
                             id: value
-                            anchors.horizontalCenter: parent.horizontalCenter
                             label: qsTr("Value")
+                            placeholderText: label
                             text: model.value
-                            width: parent.width - 2*Theme.horizontalPageMargin
+                            width: parent.width
+                            errorHighlight: !focus && !text
+                            EnterKey.iconSource: name.errorHighlight ? "image://theme/icon-m-enter-next"
+                                                                     : "image://theme/icon-m-enter-accept"
+                            EnterKey.onClicked: {
+                                if (!text) {
+                                    return
+                                }
+
+                                if (name.errorHighlight) {
+                                    name.forceActiveFocus()
+                                } else {
+                                    value.focus = false
+                                }
+                            }
                         }
 
                         Button {
