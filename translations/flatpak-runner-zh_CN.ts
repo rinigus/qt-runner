@@ -134,7 +134,7 @@
     <message>
         <location filename="../qml/AppSettingsPage.qml" line="307"/>
         <source>Value</source>
-        <translation>只</translation>
+        <translation>值</translation>
     </message>
     <message>
         <location filename="../qml/AppSettingsPage.qml" line="316"/>
@@ -192,7 +192,7 @@
     <message>
         <location filename="../qml/MainPage.qml" line="73"/>
         <source>Flatpak Runner</source>
-        <translation>Flatpak Runner</translation>
+        <translation>Flatpak 运行程序</translation>
     </message>
     <message>
         <location filename="../qml/MainPage.qml" line="130"/>
