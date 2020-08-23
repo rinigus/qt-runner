@@ -127,22 +127,22 @@
         <translation>环境变量</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="299"/>
+        <location filename="../qml/AppSettingsPage.qml" line="298"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="307"/>
+        <location filename="../qml/AppSettingsPage.qml" line="319"/>
         <source>Value</source>
         <translation>值</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="316"/>
+        <location filename="../qml/AppSettingsPage.qml" line="343"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="348"/>
+        <location filename="../qml/AppSettingsPage.qml" line="375"/>
         <source>Add new variable</source>
         <translation>添加新变量</translation>
     </message>

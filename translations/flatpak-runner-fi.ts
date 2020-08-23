@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fi">
 <context>
     <name>AboutPage</name>
     <message>
@@ -125,22 +127,22 @@
         <translation>Ympäristömuuttuja</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="299"/>
+        <location filename="../qml/AppSettingsPage.qml" line="298"/>
         <source>Name</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="307"/>
+        <location filename="../qml/AppSettingsPage.qml" line="319"/>
         <source>Value</source>
         <translation>Arvo</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="316"/>
+        <location filename="../qml/AppSettingsPage.qml" line="343"/>
         <source>Delete</source>
         <translation>Poista</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="348"/>
+        <location filename="../qml/AppSettingsPage.qml" line="375"/>
         <source>Add new variable</source>
         <translation>Lisää ympäristömuuttuja</translation>
     </message>

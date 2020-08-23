@@ -127,22 +127,22 @@
         <translation>Miljövariabel</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="299"/>
+        <location filename="../qml/AppSettingsPage.qml" line="298"/>
         <source>Name</source>
         <translation>Namn</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="307"/>
+        <location filename="../qml/AppSettingsPage.qml" line="319"/>
         <source>Value</source>
         <translation>Värde</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="316"/>
+        <location filename="../qml/AppSettingsPage.qml" line="343"/>
         <source>Delete</source>
         <translation>Ta bort</translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="348"/>
+        <location filename="../qml/AppSettingsPage.qml" line="375"/>
         <source>Add new variable</source>
         <translation>Lägg till ny variabel</translation>
     </message>

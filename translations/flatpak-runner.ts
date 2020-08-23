@@ -127,22 +127,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="299"/>
+        <location filename="../qml/AppSettingsPage.qml" line="298"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="307"/>
+        <location filename="../qml/AppSettingsPage.qml" line="319"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="316"/>
+        <location filename="../qml/AppSettingsPage.qml" line="343"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AppSettingsPage.qml" line="348"/>
+        <location filename="../qml/AppSettingsPage.qml" line="375"/>
         <source>Add new variable</source>
         <translation type="unfinished"></translation>
     </message>
