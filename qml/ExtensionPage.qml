@@ -87,7 +87,7 @@ Page {
                 text: qsTr("Update extension")
                 onClicked: {
                     busy.running = true;
-                    app.py.call("fpk.sync_extension", [], function() {
+                    app.py.call("fpk.sync_extension", [programArch], function() {
                         busy.running = false;
                     });
                 }
@@ -109,7 +109,7 @@ Page {
                 text: qsTr("Remove extension")
                 onClicked: {
                     busy.running = true;
-                    app.py.call("fpk.remove_extension", [], function() {
+                    app.py.call("fpk.remove_extension", [programArch], function() {
                         busy.running = false;
                     });
                 }

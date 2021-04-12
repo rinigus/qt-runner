@@ -24,6 +24,11 @@ CONFIG += sailfishapp sailfishapp_i18n
 DEFINES += QT_COMPOSITOR_QUICK
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+equals(ARCH, "aarch64") {
+    DEFINES += AARCH64
+}
+message("Arch was defined as $$ARCH")
+
 QT += quick qml svg
 QT += quick-private
 

@@ -86,7 +86,8 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
           << QLatin1String("/vendor")
           << QLatin1String("/odm")
           << QLatin1String("/plat_property_contexts")
-          << QLatin1String("/nonplat_property_contexts");
+          << QLatin1String("/nonplat_property_contexts")
+          << QLatin1String("/apex");
   for (const auto &fs: filesys)
     if (QFileInfo::exists(fs))
       fo << QStringLiteral("--filesystem=%1:ro").arg(fs);
@@ -124,21 +125,42 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
 //    fo << "--env=LD_LIBRARY_PATH=" + qset.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
 
   // libhybris
-  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/usr/lib/arm-linux-gnueabihf/GL/host/lib/libhybris"
-     << "--env=HYBRIS_LINKER_DIR=/usr/lib/arm-linux-gnueabihf/GL/host/lib/libhybris/linker";
+  QLatin1String extPath(
+      #ifdef AARCH64
+        "/usr/lib/aarch64-linux-gnu/GL/host"
+      #else
+        "/usr/lib/arm-linux-gnueabihf/GL/host"
+      #endif
+        );
+  QLatin1String libStr(
+      #ifdef AARCH64
+        "lib64"
+      #else
+        "lib"
+      #endif
+        );
+  fo << QStringLiteral("--env=HYBRIS_EGLPLATFORM_DIR=%1/%2/libhybris").arg(extPath).arg(libStr)
+     << QStringLiteral("--env=HYBRIS_LINKER_DIR=%1/%2/libhybris/linker").arg(extPath).arg(libStr);
 
   // check if we have HYBRIS_LD_LIBRARY_PATH defined
   QStringList ldlibs = env.value("HYBRIS_LD_LIBRARY_PATH",
-                                 "/usr/libexec/droid-hybris/system/lib:/vendor/lib:/system/lib").split(':');
+                                 QStringLiteral("/usr/libexec/droid-hybris") +
+                                 QStringLiteral("/system/lib:/vendor/lib:/system/lib").replace(QLatin1String("lib"), libStr)).split(':');
   QStringList ldlibs_processed;
-  ldlibs_processed << "/usr/lib/arm-linux-gnueabihf/GL/host/libexec/droid-hybris/system/lib"
+  ldlibs_processed << (extPath + QLatin1String("/libexec/droid-hybris/system/") + libStr)
                    << ldlibs;
   fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
 
   // set LD_LIBRARY_PATH to the used extension
-  if (qset.value("main/set_ld_path", 1).toInt() > 0)
+  if (qset.value("main/set_ld_path",
+               #ifdef AARCH64
+                 0
+               #else
+                 1
+               #endif
+                 ).toInt() > 0)
     fo << "--env=LD_LIBRARY_PATH=" + qset.value("main/ld_library_path",
-                                                "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
+                                                extPath + QLatin1String("/") + libStr).toString();
 
   // add supplied flatpak options in the end
   fo << flatpak_options;

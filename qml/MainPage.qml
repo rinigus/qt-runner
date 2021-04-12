@@ -224,7 +224,7 @@ Page {
     // Initialize in Settings mode
     function initSettings() {
         busyInd.running = true;
-        if (app.py.call_sync("fpk.has_extension"))
+        if (app.py.call_sync("fpk.has_extension", [programArch]))
             initSettingsApps();
         else
             initSettingsExtension();
@@ -241,7 +241,7 @@ Page {
 
     function initSettingsExtension() {
         busyInfoMessage.text = qsTr("Initialize or update GL extension");
-        app.py.call("fpk.sync_extension", [], function() {
+        app.py.call("fpk.sync_extension", [programArch], function() {
             initSettingsApps()
         });
     }
