@@ -5,14 +5,14 @@ from .extension import sync_extension as sync_extension_impl
 
 # externally available functions
 
-def has_extension():
-    return has_extension_impl()
+def has_extension(arch):
+    return has_extension_impl(arch)
 
 def refresh_apps(just_delete = False):
     return refresh_apps_impl(just_delete=just_delete)
 
-def remove_extension():
-    remove_extension_impl()
+def remove_extension(arch):
+    remove_extension_impl(arch)
 
-def sync_extension():
-    sync_extension_impl()
+def sync_extension(arch):
+    sync_extension_impl(arch)
