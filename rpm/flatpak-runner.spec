@@ -40,6 +40,7 @@ rm -rf %{buildroot}
 %qmake5_install
 
 chmod 755 %{buildroot}/%{_datadir}/%{name}/scripts/flatpak-extension-hybris
+chmod 755 %{buildroot}/%{_datadir}/%{name}/scripts/flatpak-extension-hybris-aarch64
 
 desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \
