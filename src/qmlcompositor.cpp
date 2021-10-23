@@ -41,20 +41,23 @@
 #include <QGuiApplication>
 #include <QQuickView>
 #include <QWaylandSurfaceInterface>
+#include <QtCompositor/qwaylandoutput.h>
 
 #include <QDebug>
 
 QmlCompositor::QmlCompositor(QQuickView *quickView, const char *socketName)
     : QObject(quickView)
-    , QWaylandQuickCompositor(quickView, socketName, DefaultExtensions | SubSurfaceExtension)
-    , m_fullscreenSurface(0)
+    , QWaylandQuickCompositor(socketName, DefaultExtensions | SubSurfaceExtension)
+    , m_fullscreenSurface(0),
+      m_window(quickView)
 {
-    QSize size = window()->size();
+    QSize size = quickView->size();
     setSize(size.height(), size.width());
     addDefaultShell();
+    createOutput(m_window, "", "");
 
-    connect(window(), &QWindow::heightChanged, this, &QmlCompositor::sizeChanged);
-    connect(window(), &QWindow::widthChanged, this, &QmlCompositor::sizeChanged);
+    connect(m_window, &QWindow::heightChanged, this, &QmlCompositor::sizeChanged);
+    connect(m_window, &QWindow::widthChanged, this, &QmlCompositor::sizeChanged);
 }
 
 QWaylandQuickSurface *QmlCompositor::fullscreenSurface() const
@@ -64,7 +67,7 @@ QWaylandQuickSurface *QmlCompositor::fullscreenSurface() const
 
 void QmlCompositor::sizeChanged(int)
 {
-    QSize size = window()->size();
+    QSize size = m_window->size();
     setSize(size.width(), size.height());
 }
 

@@ -78,6 +78,7 @@ protected:
 
 private:
     QWaylandQuickSurface *m_fullscreenSurface;
+    QQuickView *m_window;
 };
 
 #endif // QMLCOMPOSITOR_H

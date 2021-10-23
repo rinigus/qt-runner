@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("keyboardHeight", &keyheight);
 
     // dbus service
-    DBusContainerState dbuscontainer(compositor.window(), &keyheight);
+    DBusContainerState dbuscontainer(view.data(), &keyheight);
 
     // runner
     Runner runner(program, flatpak_options, program_options, socket,
