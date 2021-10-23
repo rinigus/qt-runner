@@ -5,7 +5,7 @@ Name:       flatpak-runner
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Flatpak runner
-Version:    0.8.6
+Version:    0.9.0
 Release:    1
 Group:      Qt/Qt
 License:    BSD-3
@@ -20,7 +20,7 @@ BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
-BuildRequires:  pkgconfig(Qt5Compositor)
+BuildRequires:  pkgconfig(Qt5Compositor) >= 5.6.0
 BuildRequires:  pkgconfig(Qt5Svg)
 BuildRequires:  pkgconfig(Qt5DBus)
 BuildRequires:  qt5-qttools-linguist
