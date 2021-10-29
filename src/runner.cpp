@@ -40,6 +40,7 @@
 #include <QProcessEnvironment>
 
 #include <iostream>
+#include <unistd.h>
 
 #include "runner.h"
 
@@ -91,6 +92,9 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
   for (const auto &fs: filesys)
     if (QFileInfo::exists(fs))
       fo << QStringLiteral("--filesystem=%1:ro").arg(fs);
+
+  // add support for maliit connection via private dbus
+  fo << QStringLiteral("--filesystem=/run/user/%1/maliit-server").arg(getuid());
 
   // devices
   fo << "--device=all";
