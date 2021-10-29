@@ -129,9 +129,9 @@ int main(int argc, char *argv[])
       }
     else
       std::cerr << "Wayland socket: " << socket.toStdString() << "\n";
-    QmlCompositor compositor(view.data(), socket.toStdString().c_str());
-    QObject::connect(view.data(), SIGNAL(afterRendering()), &compositor, SLOT(sendCallbacks()));
-    view->rootContext()->setContextProperty("compositor", &compositor);
+    QmlCompositor *compositor = new QmlCompositor(view.data(), socket.toStdString().c_str());
+    QObject::connect(view.data(), SIGNAL(afterRendering()), compositor, SLOT(sendCallbacks()));
+    view->rootContext()->setContextProperty("compositor", compositor);
 
     // application settings
     AppSettings settings;
@@ -145,9 +145,9 @@ int main(int argc, char *argv[])
     DBusContainerState dbuscontainer(view.data(), &keyheight);
 
     // runner
-    Runner runner(program, flatpak_options, program_options, socket,
-                  dbuscontainer.address(), settings);
-    view->rootContext()->setContextProperty("runner", &runner);
+    Runner *runner = new Runner(program, flatpak_options, program_options, socket,
+                                dbuscontainer.address(), settings, app.data());
+    view->rootContext()->setContextProperty("runner", runner);
 
     // image converter
     ImageConverter imageconv;
@@ -172,8 +172,8 @@ int main(int argc, char *argv[])
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->create();
     QObject *firstPage = view->rootObject()->findChild<QObject*>("mainPage");
-    QObject::connect(&compositor, SIGNAL(windowAdded(QVariant)), firstPage, SLOT(windowAdded(QVariant)));
-    QObject::connect(&compositor, SIGNAL(windowResized(QVariant)), firstPage, SLOT(windowResized(QVariant)));
+    QObject::connect(compositor, SIGNAL(windowAdded(QVariant)), firstPage, SLOT(windowAdded(QVariant)));
+    QObject::connect(compositor, SIGNAL(windowResized(QVariant)), firstPage, SLOT(windowResized(QVariant)));
 
     view->show();
     app->processEvents();

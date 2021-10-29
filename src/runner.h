@@ -56,7 +56,7 @@ class Runner : public QObject
 public:
   Runner(QString program, QStringList flatpak_options,
          QStringList program_options, QString wayland_socket,
-         QString dbusaddress, AppSettings &appsettings);
+         QString dbusaddress, AppSettings &appsettings, QObject *parent=nullptr);
 
   Q_INVOKABLE void start();
 
