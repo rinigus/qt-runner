@@ -2,13 +2,9 @@
 Type=Application
 X-Nemo-Single-Instance=no
 X-Nemo-Application-Type=no-invoker
-Icon=flatpak-runner
-Exec=flatpak-runner
-Name=Flatpak
+Icon=qt-runner
+Exec=qt-runner
+Name=Qt Runner
 
-# translation example:
-# your app name in German locale (de)
-#
-# Remember to comment out the following line, if you do not want to use
-# a different app name in German locale (de).
-#Name[de]=Flatpak
+[X-Sailjail]
+Sandboxing=Disabled

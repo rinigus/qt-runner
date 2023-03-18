@@ -52,14 +52,14 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("About Flatpak Runner")
+                title: qsTr("About Qt Runner")
             }
 
             Image {
                 anchors.horizontalCenter: parent.horizontalCenter
                 fillMode: Image.PreserveAspectFit
                 smooth: true
-                source: "../icons/flatpak-runner.svg"
+                source: "../icons/qt-runner.svg"
                 sourceSize.width: Math.min(column.height,column.width)/4
             }
 
@@ -72,13 +72,12 @@ Page {
             }
 
             LabelC {
-                text: qsTr("Homepage: <a href='https://github.com/sailfishos-flatpak/flatpak-runner'>https://github.com/sailfishos-flatpak/flatpak-runner</a>")
+                text: qsTr("Homepage: <a href='https://github.com/rinigus/qt-runner'>https://github.com/sailfishos-flatpak/flatpak-runner</a>")
             }
 
             LabelC {
-                text: qsTr("This application allows you to refresh list of installed Flatpak applications, " +
-                           "set environment variables applied by default to all applications and the application-specific ones. " +
-                           "In addition, it is used to host Flatpak applications while they run on Sailfish OS.")
+                text: qsTr("This application allows you to run Qt applications that are using newer Qt version than the one shipped with Sailfish OS. " +
+                           "It allows to set environment variables applied by default to all applications and the application-specific ones.")
             }
        }
 

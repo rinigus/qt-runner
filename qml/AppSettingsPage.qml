@@ -4,7 +4,7 @@
 **               2020 Rinigus https://github.com/rinigus
 **               2012 Digia Plc and/or its subsidiary(-ies).
 **
-** This file is part of Flatpak Runner.
+** This file is part of Qt Runner.
 **
 ** You may use this file under the terms of the BSD license as follows:
 **
@@ -44,7 +44,7 @@ import "."
 Dialog {
     id: dia
 
-    property string flatpak
+    property string program
     property string name
 
     // Settings: List of applications
@@ -89,9 +89,9 @@ Dialog {
                 }
 
                 Component.onCompleted: {
-                    var s = settings.appTheme(flatpak);
+                    var s = settings.appTheme(program);
 
-                    if (flatpak == settings.defaultApp()) {
+                    if (program == settings.defaultApp()) {
                         themesw.checked = true;
                         themesw.visible = false;
                     } else {
@@ -118,7 +118,7 @@ Dialog {
                             else if (tsw.currentIndex === 2) s = 3;
                             else if (tsw.currentIndex === 3) s = -1;
                         }
-                        settings.setAppTheme(flatpak, s);
+                        settings.setAppTheme(program, s);
                     }
                 }
             }
@@ -147,7 +147,7 @@ Dialog {
                 }
 
                 Component.onCompleted: {
-                    var s = settings.appScaling(flatpak);
+                    var s = settings.appScaling(program);
                     if (s < 1) {
                         scsw.checked = false;
                         scval.value = 1;
@@ -163,7 +163,7 @@ Dialog {
                         var s = 0;
                         if (scsw.checked)
                             s = scval.value;
-                        settings.setAppScaling(flatpak, s);
+                        settings.setAppScaling(program, s);
                     }
                 }
             }
@@ -193,11 +193,11 @@ Dialog {
                 }
 
                 Component.onCompleted: {
-                    var s = settings.appDpi(flatpak);
+                    var s = settings.appDpi(program);
                     if (s < 1) {
                         dpisw.checked = false;
                         dpival.value = Math.round(settings.defaultDpi() /
-                                                  Math.max(1,settings.appScaling(flatpak)));
+                                                  Math.max(1,settings.appScaling(program)));
                     } else {
                         dpisw.checked = true;
                         dpival.value = Math.min(s, dpival.maximumValue);
@@ -210,7 +210,7 @@ Dialog {
                         var s = 0;
                         if (dpisw.checked)
                             s = dpival.value;
-                        settings.setAppDpi(flatpak, s);
+                        settings.setAppDpi(program, s);
                     }
                 }
             }
@@ -237,9 +237,9 @@ Dialog {
                 }
 
                 Component.onCompleted: {
-                    var s = settings.appFollowKeyboard(flatpak);
+                    var s = settings.appFollowKeyboard(program);
 
-                    if (flatpak == settings.defaultApp()) {
+                    if (program == settings.defaultApp()) {
                         keyoversw.checked = true;
                         keyoversw.visible = false;
                         if (s < 1)
@@ -269,7 +269,7 @@ Dialog {
                             s = -1;
                         else if (keysw.checked)
                             s = 1;
-                        settings.setAppFollowKeyboard(flatpak, s);
+                        settings.setAppFollowKeyboard(program, s);
                     }
                 }
             }
@@ -350,15 +350,15 @@ Dialog {
                             target: dia
                             onAccepted: {
                                 if (item.removed) {
-                                    settings.rmAppEnvVar(dia.flatpak, model.key);
+                                    settings.rmAppEnvVar(dia.program, model.key);
                                     return;
                                 }
                                 var nkey = name.text;
                                 var nvalue = value.text;
                                 if (nkey !== model.key)
-                                    settings.rmAppEnvVar(dia.flatpak, model.key);
+                                    settings.rmAppEnvVar(dia.program, model.key);
                                 if (nkey && (nkey !== model.key || nvalue !== model.value))
-                                    settings.setAppEnvVar(dia.flatpak, nkey, nvalue);
+                                    settings.setAppEnvVar(dia.program, nkey, nvalue);
                             }
                         }
                     }
@@ -383,7 +383,7 @@ Dialog {
     }
 
     Component.onCompleted: {
-        var s = JSON.parse(settings.appEnvJson(flatpak));
+        var s = JSON.parse(settings.appEnvJson(program));
         env.model.clear()
         for (var key in s)
             env.model.append({

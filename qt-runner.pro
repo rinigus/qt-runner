@@ -10,7 +10,7 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = flatpak-runner
+TARGET = qt-runner
 
 # PREFIX
 isEmpty(PREFIX) {
@@ -49,17 +49,15 @@ OTHER_FILES += \
     qml/main.qml \
     qml/AboutPage.qml \
     qml/AppSettingsPage.qml \
-    qml/ExtensionPage.qml \
     qml/MainPage.qml \
     qml/LabelC.qml \
     qml/Python.qml \
     qml/Space.qml \
     qml/WindowContainer.qml \
-    scripts/flatpak-extension-hybris \
-    fpk/*.py
+    qtr/*.py
 
 DISTFILES += \
-    rpm/flatpak-runner.spec
+    rpm/qt-runner.spec
 
 HEADERS += \
     src/appsettings.h \
@@ -73,9 +71,9 @@ scripts.files = scripts
 scripts.path = $$PREFIX/share/$${TARGET}
 INSTALLS += scripts
 
-fpk.files = fpk
-fpk.path = $$PREFIX/share/$${TARGET}
-INSTALLS += fpk
+qtr.files = qtr
+qtr.path = $$PREFIX/share/$${TARGET}
+INSTALLS += qtr
 
 icons.files = icons
 icons.path = $$PREFIX/share/$${TARGET}

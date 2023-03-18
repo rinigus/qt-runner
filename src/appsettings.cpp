@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2020 Rinigus https://github.com/rinigus
 **
-** This file is part of Flatpak Runner.
+** This file is part of Qt Runner.
 **
 ** You may use this file under the terms of the BSD license as follows:
 **
@@ -88,26 +88,26 @@ AppSettings::AppSettings(QObject *parent) : QObject(parent)
   settings.setValue(SET_GENERAL "/version", SETTINGS_VERSION);
 }
 
-int AppSettings::appDpi(QString flatpak, bool merged) const
+int AppSettings::appDpi(QString program, bool merged) const
 {
   QSettings settings;
-  int d = settings.value(SET_APP + flatpak + "/dpi", 0).toInt();
+  int d = settings.value(SET_APP + program + "/dpi", 0).toInt();
   if (d > 0 || !merged) return d;
-  int s = appScaling(flatpak);
+  int s = appScaling(program);
   if (s > 1) return (int)(defaultDpi() / ((float)s));
   d = settings.value(SET_APP + defaultApp() + "/dpi", 0).toInt();
   if (d > 0) return d;
   return defaultDpi();
 }
 
-QMap<QString, QString> AppSettings::appEnv(QString flatpak, bool merged) const
+QMap<QString, QString> AppSettings::appEnv(QString program, bool merged) const
 {
   QSettings settings;
-  QMap<QString, QVariant> mv = settings.value(SET_APP + flatpak + "/env").toMap();
+  QMap<QString, QVariant> mv = settings.value(SET_APP + program + "/env").toMap();
   QMap<QString, QString> m;
   for (auto i = mv.constBegin(); i != mv.constEnd(); ++i)
     m.insert(i.key(), i.value().toString());
-  if (flatpak == defaultApp()) return m;
+  if (program == defaultApp()) return m;
   if (merged)
     {
       QMap<QString, QString> d = appEnv(defaultApp());
@@ -118,50 +118,50 @@ QMap<QString, QString> AppSettings::appEnv(QString flatpak, bool merged) const
   return m;
 }
 
-QString AppSettings::appEnvJson(QString flatpak, bool merged) const
+QString AppSettings::appEnvJson(QString program, bool merged) const
 {
-  QMap<QString, QString> m = appEnv(flatpak, merged);
+  QMap<QString, QString> m = appEnv(program, merged);
   QMap<QString, QVariant> v;
   for (auto i = m.constBegin(); i != m.constEnd(); ++i)
     v.insert(i.key(), i.value());
   return QJsonDocument::fromVariant(v).toJson();
 }
 
-int AppSettings::appFollowKeyboard(QString flatpak, bool merged) const
+int AppSettings::appFollowKeyboard(QString program, bool merged) const
 {
   QSettings settings;
-  int d = settings.value(SET_APP + flatpak + "/followKeyboard", -1).toInt();
-  if (d >= 0 || (!merged && flatpak != defaultApp())) return d;
+  int d = settings.value(SET_APP + program + "/followKeyboard", -1).toInt();
+  if (d >= 0 || (!merged && program != defaultApp())) return d;
   return settings.value(SET_APP + defaultApp() + "/followKeyboard", 0).toInt();
 }
 
-QString AppSettings::appIcon(QString flatpak) const
+QString AppSettings::appIcon(QString program) const
 {
   QSettings settings;
-  return settings.value(SET_APP + flatpak + "/icon").toString();
+  return settings.value(SET_APP + program + "/icon").toString();
 }
 
-QString AppSettings::appName(QString flatpak) const
+QString AppSettings::appName(QString program) const
 {
   QSettings settings;
-  return settings.value(SET_APP + flatpak + "/name").toString();
+  return settings.value(SET_APP + program + "/name").toString();
 }
 
-int AppSettings::appScaling(QString flatpak, bool merged) const
+int AppSettings::appScaling(QString program, bool merged) const
 {
   QSettings settings;
-  int s = settings.value(SET_APP + flatpak + "/scaling", 0).toInt();
+  int s = settings.value(SET_APP + program + "/scaling", 0).toInt();
   if (s > 0 || !merged) return s;
   s = settings.value(SET_APP + defaultApp() + "/scaling", 1).toInt();
   if (s < 1) s = 1;
   return s;
 }
 
-int AppSettings::appTheme(QString flatpak, bool merged) const
+int AppSettings::appTheme(QString program, bool merged) const
 {
   QSettings settings;
-  int s = settings.value(SET_APP + flatpak + "/theme", THEME_IGNORE).toInt();
-  if (s != THEME_IGNORE || (!merged && flatpak != defaultApp())) return s;
+  int s = settings.value(SET_APP + program + "/theme", THEME_IGNORE).toInt();
+  if (s != THEME_IGNORE || (!merged && program != defaultApp())) return s;
   s = settings.value(SET_APP + defaultApp() + "/theme", THEME_AUTO).toInt();
   return s;
 }
@@ -194,77 +194,77 @@ void AppSettings::updateApps(QString appsInJson)
   for (QJsonArray::const_iterator iter=arr.constBegin(); iter!=arr.constEnd(); ++iter)
     {
       QJsonObject obj = (*iter).toObject();
-      QString flatpak = obj.value("flatpak").toString();
+      QString program = obj.value("program").toString();
       QString name = obj.value("name").toString();
       QString icon = obj.value("icon").toString();
-      if (flatpak.isEmpty()) continue;
-      applist.append(flatpak);
-      settings.setValue(SET_APP + flatpak + "/name", name);
-      settings.setValue(SET_APP + flatpak + "/icon", icon);
+      if (program.isEmpty()) continue;
+      applist.append(program);
+      settings.setValue(SET_APP + program + "/name", name);
+      settings.setValue(SET_APP + program + "/icon", icon);
     }
   settings.setValue(SET_GENERAL "/applist", applist);
 
   emit appListChanged();
 }
 
-void AppSettings::rmAppEnvVar(QString flatpak, QString name)
+void AppSettings::rmAppEnvVar(QString program, QString name)
 {
-  QMap<QString,QString> e = appEnv(flatpak);
+  QMap<QString,QString> e = appEnv(program);
   if (e.contains(name))
     {
       e.remove(name);
-      setAppEnv(flatpak, e);
+      setAppEnv(program, e);
     }
 }
 
-void AppSettings::setAppDpi(QString flatpak, int dpi)
+void AppSettings::setAppDpi(QString program, int dpi)
 {
   QSettings settings;
   if (dpi < 1)
     {
-      settings.remove(SET_APP + flatpak + "/dpi");
+      settings.remove(SET_APP + program + "/dpi");
     }
-  settings.setValue(SET_APP + flatpak + "/dpi", dpi);
+  settings.setValue(SET_APP + program + "/dpi", dpi);
 }
 
-void AppSettings::setAppEnv(QString flatpak, QMap<QString, QString> env)
+void AppSettings::setAppEnv(QString program, QMap<QString, QString> env)
 {
   QSettings settings;
   QMap<QString, QVariant> m;
   for (auto i = env.constBegin(); i != env.constEnd(); ++i)
     m.insert(i.key(), i.value());
-  settings.setValue(SET_APP + flatpak + "/env", m);
+  settings.setValue(SET_APP + program + "/env", m);
 }
 
-void AppSettings::setAppEnvVar(QString flatpak, QString name, QString value)
+void AppSettings::setAppEnvVar(QString program, QString name, QString value)
 {
-  QMap<QString,QString> e = appEnv(flatpak);
+  QMap<QString,QString> e = appEnv(program);
   e.insert(name, value);
-  setAppEnv(flatpak, e);
+  setAppEnv(program, e);
 }
 
-void AppSettings::setAppFollowKeyboard(QString flatpak, int follow)
+void AppSettings::setAppFollowKeyboard(QString program, int follow)
 {
   QSettings settings;
-  settings.setValue(SET_APP + flatpak + "/followKeyboard", follow);
+  settings.setValue(SET_APP + program + "/followKeyboard", follow);
 }
 
-void AppSettings::setAppScaling(QString flatpak, int scaling)
+void AppSettings::setAppScaling(QString program, int scaling)
 {
   QSettings settings;
   if (scaling < 1)
     {
-      settings.remove(SET_APP + flatpak + "/scaling");
+      settings.remove(SET_APP + program + "/scaling");
     }
-  settings.setValue(SET_APP + flatpak + "/scaling", scaling);
+  settings.setValue(SET_APP + program + "/scaling", scaling);
 }
 
-void AppSettings::setAppTheme(QString flatpak, int theme)
+void AppSettings::setAppTheme(QString program, int theme)
 {
   if (theme >= THEME_MIN_VALUE && theme <= THEME_MAX_VALUE)
     {
       QSettings settings;
-      settings.setValue(SET_APP + flatpak + "/theme", theme);
+      settings.setValue(SET_APP + program + "/theme", theme);
     }
 }
 
@@ -275,11 +275,11 @@ void AppSettings::setDark(bool dark)
   emit darkChanged();
 }
 
-void AppSettings::applyTheme(QString flatpak)
+void AppSettings::applyTheme(QString program)
 {
-  if (flatpak.isEmpty()) return;
+  if (program.isEmpty()) return;
 
-  int theme = appTheme(flatpak, true);
+  int theme = appTheme(program, true);
   if (theme == THEME_MANUAL) return;
   if (theme == THEME_AUTO) theme = m_dark ? THEME_DARK : THEME_LIGHT;
 
@@ -290,7 +290,7 @@ void AppSettings::applyTheme(QString flatpak)
     }
 
   QDir dir = QDir::home();
-  QString path = QStringLiteral(".var/app/%1/config").arg(flatpak);
+  QString path = QStringLiteral(".var/app/%1/config").arg(program);
   dir.mkpath(path);
   dir.cd(path);
   QFile file(dir.absoluteFilePath("kdeglobals"));

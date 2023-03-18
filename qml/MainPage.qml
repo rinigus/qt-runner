@@ -4,7 +4,7 @@
 **               2020 Rinigus https://github.com/rinigus
 **               2012 Digia Plc and/or its subsidiary(-ies).
 **
-** This file is part of Flatpak Runner.
+** This file is part of Qt Runner.
 **
 ** You may use this file under the terms of the BSD license as follows:
 **
@@ -70,7 +70,7 @@ Page {
         id: alist
         anchors.fill: parent
         header: PageHeader {
-            title: qsTr("Flatpak Runner")
+            title: qsTr("Qt Runner")
         }
 
         delegate: ListItem {
@@ -112,12 +112,12 @@ Page {
                 anchors.topMargin: Theme.paddingSmall
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
-                text: model.flatpak !== settings.defaultApp() ? model.flatpak : ""
+                text: model.program !== settings.defaultApp() ? model.program : ""
             }
 
             onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"),
                                       {
-                                        "flatpak": model.flatpak,
+                                        "program": model.program,
                                         "name": model.name
                                       })
         }
@@ -130,10 +130,6 @@ Page {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
-            MenuItem {
-                text: qsTr("Extension")
-                onClicked: pageStack.push(Qt.resolvedUrl("ExtensionPage.qml"))
-            }
         }
 
         VerticalScrollDecorator { flickable: alist }
@@ -143,14 +139,14 @@ Page {
             onAppListChanged: {
                 alist.model.clear();
                 alist.model.append({
-                                       'flatpak': settings.defaultApp(),
+                                       'program': settings.defaultApp(),
                                        'name': qsTr('Default settings'),
-                                       'icon': Qt.resolvedUrl("../icons/flatpak-runner.svg")
+                                       'icon': Qt.resolvedUrl("../icons/qt-runner.svg")
                                    });
                 var apps = settings.apps();
                 apps.forEach(function (item, index) {
                     alist.model.append({
-                                           'flatpak': item,
+                                           'program': item,
                                            'name': settings.appName(item),
                                            'icon': settings.appIcon(item)
                                        })

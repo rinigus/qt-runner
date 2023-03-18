@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2020 Rinigus https://github.com/rinigus
 **
-** This file is part of Flatpak Runner.
+** This file is part of Qt Runner.
 **
 ** You may use this file under the terms of the BSD license as follows:
 **
@@ -51,14 +51,14 @@ class AppSettings : public QObject
 public:
   explicit AppSettings(QObject *parent = nullptr);
 
-  Q_INVOKABLE int appDpi(QString flatpak, bool merged=false) const;
-  Q_INVOKABLE QMap<QString, QString> appEnv(QString flatpak, bool merged=false) const;
-  Q_INVOKABLE QString appEnvJson(QString flatpak, bool merged=false) const;
-  Q_INVOKABLE int appFollowKeyboard(QString flatpak, bool merged=false) const;
-  Q_INVOKABLE QString appIcon(QString flatpak) const;
-  Q_INVOKABLE QString appName(QString flatpak) const;
-  Q_INVOKABLE int appScaling(QString flatpak, bool merged=false) const;
-  Q_INVOKABLE int appTheme(QString flatpak, bool merged=false) const;
+  Q_INVOKABLE int appDpi(QString program, bool merged=false) const;
+  Q_INVOKABLE QMap<QString, QString> appEnv(QString program, bool merged=false) const;
+  Q_INVOKABLE QString appEnvJson(QString program, bool merged=false) const;
+  Q_INVOKABLE int appFollowKeyboard(QString program, bool merged=false) const;
+  Q_INVOKABLE QString appIcon(QString program) const;
+  Q_INVOKABLE QString appName(QString program) const;
+  Q_INVOKABLE int appScaling(QString program, bool merged=false) const;
+  Q_INVOKABLE int appTheme(QString program, bool merged=false) const;
 
   Q_INVOKABLE QStringList apps() const;
 
@@ -67,15 +67,15 @@ public:
 
   Q_INVOKABLE void updateApps(QString appsInJson);
 
-  Q_INVOKABLE void rmAppEnvVar(QString flatpak, QString name);
-  Q_INVOKABLE void setAppDpi(QString flatpak, int dpi);
-  Q_INVOKABLE void setAppEnv(QString flatpak, QMap<QString, QString> env);
-  Q_INVOKABLE void setAppEnvVar(QString flatpak, QString name, QString value);
-  Q_INVOKABLE void setAppFollowKeyboard(QString flatpak, int follow);
-  Q_INVOKABLE void setAppScaling(QString flatpak, int scaling);
-  Q_INVOKABLE void setAppTheme(QString flatpak, int theme);
+  Q_INVOKABLE void rmAppEnvVar(QString program, QString name);
+  Q_INVOKABLE void setAppDpi(QString program, int dpi);
+  Q_INVOKABLE void setAppEnv(QString program, QMap<QString, QString> env);
+  Q_INVOKABLE void setAppEnvVar(QString program, QString name, QString value);
+  Q_INVOKABLE void setAppFollowKeyboard(QString program, int follow);
+  Q_INVOKABLE void setAppScaling(QString program, int scaling);
+  Q_INVOKABLE void setAppTheme(QString program, int theme);
 
-  Q_INVOKABLE void applyTheme(QString flatpak);
+  Q_INVOKABLE void applyTheme(QString program);
 
   bool dark() const { return m_dark; }
   void setDark(bool dark);

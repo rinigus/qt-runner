@@ -47,20 +47,17 @@
 #include <QDebug>
 
 
-Runner::Runner(QString program, QStringList flatpak_options, QStringList program_options,
+Runner::Runner(QString program, QStringList /*runner_options*/, QStringList program_options,
                QString wayland_socket, QString dbusaddress, AppSettings &appsettings, QObject *parent):
   QObject(parent), m_crashed(false), m_exitCode(0)
 {
   if (program.isEmpty())
     return; // nothing to do
 
-  QString fc = "flatpak";
+  QString fc = program;
   QStringList fo;
 
   QSettings qset;
-
-  // run command
-  fo << "run";
 
   // Wayland
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -74,109 +71,26 @@ Runner::Runner(QString program, QStringList flatpak_options, QStringList program
     env.remove("QMLSCENE_DEVICE");
 
   // dpi and scaling factor
-  fo << QStringLiteral("--env=QT_WAYLAND_FORCE_DPI=%1").arg(appsettings.appDpi(program, true));
+  env.insert("QT_WAYLAND_FORCE_DPI", QString("%1").arg(appsettings.appDpi(program, true)));
   {
     int scale = appsettings.appScaling(program, true);
     if (scale > 1)
-      fo << QString("--env=QT_SCALE_FACTOR=%1").arg(scale);
+      env.insert("QT_SCALE_FACTOR", QString("%1").arg(scale));
   }
-
-  // filesystems
-  QStringList filesys;
-  filesys << QLatin1String("/system")
-          << QLatin1String("/vendor")
-          << QLatin1String("/odm")
-          << QLatin1String("/plat_property_contexts")
-          << QLatin1String("/nonplat_property_contexts")
-          << QLatin1String("/apex");
-  for (const auto &fs: filesys)
-    if (QFileInfo::exists(fs))
-      fo << QStringLiteral("--filesystem=%1:ro").arg(fs);
-
-  // add support for maliit connection via private dbus
-  fo << QStringLiteral("--filesystem=/run/user/%1/maliit-server").arg(getuid());
-
-  // devices
-  fo << "--device=all";
-
-  // keyboard
-  fo << "--talk-name=org.maliit.server";
 
   // Set environment variables
   QMap<QString,QString> fpkenv = appsettings.appEnv(program, true);
   for (auto i=fpkenv.constBegin(); i!=fpkenv.constEnd(); ++i)
-    fo << "--env=" + i.key() + "=" + i.value();
+    env.insert(i.key(), i.value());
 
-//  // libhybris
-//  fo << "--env=HYBRIS_EGLPLATFORM_DIR=/var/run/host/usr/lib/libhybris"
-//     << "--env=HYBRIS_LINKER_DIR=/var/run/host/usr/lib/libhybris/linker";
-
-//  // check if we have HYBRIS_LD_LIBRARY_PATH defined
-//  QStringList ldlibs = env.value("HYBRIS_LD_LIBRARY_PATH",
-//                                 "/usr/libexec/droid-hybris/system/lib:/vendor/lib:/system/lib").split(':');
-//  QStringList ldlibs_processed;
-//  for (QString &s: ldlibs)
-//    {
-//      if (s.startsWith("/usr"))
-//        ldlibs_processed.append("/var/run/host" + s);
-//      else
-//        ldlibs_processed.append(s);
-//    }
-//  fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
-
-//  // set LD_LIBRARY_PATH to the used extension
-//  if (qset.value("main/set_ld_path", 1).toInt() > 0)
-//    fo << "--env=LD_LIBRARY_PATH=" + qset.value("main/ld_library_path", "/usr/lib/arm-linux-gnueabihf/GL/host/lib").toString();
-
-  // libhybris
-  QLatin1String extPath(
-      #ifdef AARCH64
-        "/usr/lib/aarch64-linux-gnu/GL/host"
-      #else
-        "/usr/lib/arm-linux-gnueabihf/GL/host"
-      #endif
-        );
-  QLatin1String libStr(
-      #ifdef AARCH64
-        "lib64"
-      #else
-        "lib"
-      #endif
-        );
-  fo << QStringLiteral("--env=HYBRIS_EGLPLATFORM_DIR=%1/%2/libhybris").arg(extPath).arg(libStr)
-     << QStringLiteral("--env=HYBRIS_LINKER_DIR=%1/%2/libhybris/linker").arg(extPath).arg(libStr);
-
-  // check if we have HYBRIS_LD_LIBRARY_PATH defined
-  QStringList ldlibs = env.value("HYBRIS_LD_LIBRARY_PATH",
-                                 QStringLiteral("/usr/libexec/droid-hybris") +
-                                 QStringLiteral("/system/lib:/vendor/lib:/system/lib").replace(QLatin1String("lib"), libStr)).split(':');
-  QStringList ldlibs_processed;
-  ldlibs_processed << (extPath + QLatin1String("/libexec/droid-hybris/system/") + libStr)
-                   << ldlibs;
-  fo << "--env=HYBRIS_LD_LIBRARY_PATH=" + ldlibs_processed.join(':');
-
-  // set LD_LIBRARY_PATH to the used extension
-  if (qset.value("main/set_ld_path",
-               #ifdef AARCH64
-                 0
-               #else
-                 1
-               #endif
-                 ).toInt() > 0)
-    fo << "--env=LD_LIBRARY_PATH=" + qset.value("main/ld_library_path",
-                                                extPath + QLatin1String("/") + libStr).toString();
-
-  // add supplied flatpak options in the end
-  fo << flatpak_options;
-
-  // add program and its options
-  fo << program << program_options;
+  // add program options
+  fo << program_options;
 
   // debug
 #if 1
-  std::cout << "WAYLAND_DISPLAY=\"" << wayland_socket.toStdString() << "\" "
-            << "FLATPAK_MALIIT_CONTAINER_DBUS=\"" << dbusaddress.toStdString() << "\" "
-            << fc.toStdString() << " " << fo.join(' ').toStdString() << "\n";
+  for (const auto s: env.toStringList())
+    std::cout << s.toStdString() << "\n";
+  std::cout << fc.toStdString() << " " << fo.join(' ').toStdString() << "\n";
 #endif
 
   // start application

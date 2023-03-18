@@ -1,19 +1,18 @@
-Name:       flatpak-runner
+Name:       qt-runner
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
-Summary:    Flatpak runner
-Version:    0.9.0
+Summary:    Qt runner
+Version:    0.1.0
 Release:    1
 Group:      Qt/Qt
 License:    BSD-3
-URL:        https://github.com/rinigus/flatpak-runner
+URL:        https://github.com/rinigus/qt-runner
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   rsync
-Requires:   flatpak
 Requires:   xdg-desktop-portal > 0.10
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.5.1
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
@@ -26,7 +25,7 @@ BuildRequires:  pkgconfig(Qt5DBus)
 BuildRequires:  qt5-qttools-linguist
 
 %description
-Wrapper for running Flatpak apps on Sailfish.
+Wrapper for running Qt 5.15 apps on Sailfish.
 
 
 %prep
@@ -39,9 +38,6 @@ Wrapper for running Flatpak apps on Sailfish.
 %install
 rm -rf %{buildroot}
 %qmake5_install
-
-chmod 755 %{buildroot}/%{_datadir}/%{name}/scripts/flatpak-extension-hybris
-chmod 755 %{buildroot}/%{_datadir}/%{name}/scripts/flatpak-extension-hybris-aarch64
 
 desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \

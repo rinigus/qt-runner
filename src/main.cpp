@@ -1,10 +1,10 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017-2020 Elros https://github.com/elros34
-**               2020 Rinigus https://github.com/rinigus
+**               2020-2023 Rinigus https://github.com/rinigus
 **               2012 Digia Plc and/or its subsidiary(-ies).
 **
-** This file is part of Flatpak Runner.
+** This file is part of Qt Runner.
 **
 ** You may use this file under the terms of the BSD license as follows:
 **
@@ -70,8 +70,8 @@ QString getFreeWaylandSocket()
 int main(int argc, char *argv[])
 {
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
-    app->setApplicationName("flatpak-runner");
-    app->setOrganizationName("flatpak-runner");
+    app->setApplicationName("qt-runner");
+    app->setOrganizationName("qt-runner");
     app->setApplicationVersion(APP_VERSION);
 
     QStringList posopt;
@@ -80,9 +80,9 @@ int main(int argc, char *argv[])
 
     if (posopt.length() >= 1 && posopt[0] == "--help")
       {
-        std::cout << "\nFlatpak Runner: helper for running Flatpak applications\n"
+        std::cout << "\nQt Runner: helper for running Qt applications\n"
                   << "\nUsage:\n"
-                  << argv[0] << " [flatpak run options] applicationID [application options]\n"
+                  << argv[0] << " applicationPath [application options]\n"
                   << "\nWhen started without arguments, it will open Wayland server with the corresponding socket printed out in standard output\n"
                   << "\nOther recognized options:\n"
                   << " --help This help screen\n"
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
     bool run = !posopt.isEmpty();
 
-    QStringList flatpak_options;
+    QStringList runner_options;
     QString program;
     QStringList program_options;
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
       {
         for (QString &s: posopt) {
             bool isopt = s.startsWith('-');
-            if (isopt && program.isEmpty()) flatpak_options.append(s);
+            if (isopt && program.isEmpty()) runner_options.append(s);
             else if (isopt || !program.isEmpty()) program_options.append(s);
             if (!isopt && program.isEmpty())
               program = s;
@@ -109,8 +109,8 @@ int main(int argc, char *argv[])
 
         std::cout << "Starting: " << program.toStdString() << "\n";
 
-        if (!flatpak_options.isEmpty())
-          std::cout << "Flatpak run options: " << flatpak_options.join(' ').toStdString() << "\n";
+        if (!runner_options.isEmpty())
+          std::cout << "runner run options: " << runner_options.join(' ').toStdString() << "\n";
 
         if (!program_options.isEmpty())
           std::cout << "Program options: " << program_options.join(' ').toStdString() << "\n";
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
     DBusContainerState dbuscontainer(view.data(), &keyheight);
 
     // runner
-    Runner *runner = new Runner(program, flatpak_options, program_options, socket,
+    Runner *runner = new Runner(program, runner_options, program_options, socket,
                                 dbuscontainer.address(), settings, app.data());
     view->rootContext()->setContextProperty("runner", runner);
 

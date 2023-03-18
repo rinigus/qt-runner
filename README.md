@@ -1,45 +1,33 @@
-# Flatpak Runner
+# Qt Runner
 
-This is a helper program for running Flatpak applications
+This is a helper program for running Qt 5.15 applications
 on Sailfish.
 
 
 ## Usage
 
-To run Flatpak application, start
+To run Qt application, start
 
 ```
-flatpak-runner [flatpak_run_opt1 flatpak_run_opt2 ...] application [app_opt_1 app_opt_2 ...]
+qt-runner application [app_opt_1 app_opt_2 ...]
 ```
 
-where `application` is a full Flatpak application ID. You can specify
-Flatpak run and application command line options as optional arguments
-to `flatpak-runner`. Options specified before application are
-considered as Flatpak run options.
-
-For libhybris support, you have to generate Flatpak extension. For that,
-run `flatpak-extension-hybris` as a local user (nemo). This has to be run
-every time you update libhybris on your device (usually after each Sailfish
-update).
-
-When installing Flatpak applications, use `--user` options to install it in
-your home folder.
+where `application` is a full Qt application path. You can specify
+application command line options as optional arguments
+to `qt-runner`.
 
 
 ## Mode of operation
 
-`flatpak-runner` starts a separate Wayland compositor with the first
+`qt-runner` starts a separate Wayland compositor with the first
 available Wayland socket. It sets `WAYLAND_DISPLAY` varaible in the
-environment for the launched `flatpak run` command. In addition, it
+environment for the launched application. In addition, it
 sets multiple options
 
 * setting DPI to the physical DPI for Qt applications (can be
   overwritten in settings file)
-* mounting `/system` and `/vendor` in read-only mode for libhybris
-* allowing access to all devices
-* setting hybris environment variables
 
-If `flatpak-runner` is called without any arguments, it will start
+If `qt-runner` is called without any arguments, it will start
 Wayland server with the first available socket and will print its
 location at standard output.
 
@@ -60,13 +48,14 @@ on Sailfish.
 
 ## Translations
 
-Please use Transifex project for translations: https://www.transifex.com/rinigus/flatpak-runner/
-
+Not setup yet.
 
 ## Acknowledgments
 
-The code is based on QtWayland [example
+Qt Runner is based on [Flatpak
+Runner](https://github.com/sailfishos-flatpak/flatpak-runner). The
+code is based on QtWayland [example
 compositor](https://github.com/qt/qtwayland/tree/5.4/examples/wayland/qml-compositor)
 and adaptation of it for Sailfish:
-[qxcompositor](https://github.com/elros34/qxcompositor)
+[qxcompositor](https://github.com/elros34/qxcompositor).
 

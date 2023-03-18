@@ -54,7 +54,7 @@ class Runner : public QObject
   Q_PROPERTY(QString program READ program NOTIFY programChanged)
 
 public:
-  Runner(QString program, QStringList flatpak_options,
+  Runner(QString program, QStringList runner_options,
          QStringList program_options, QString wayland_socket,
          QString dbusaddress, AppSettings &appsettings, QObject *parent=nullptr);
 
