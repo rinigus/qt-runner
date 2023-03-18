@@ -13,7 +13,6 @@ URL:        https://github.com/rinigus/qt-runner
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   rsync
-Requires:   xdg-desktop-portal > 0.10
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.5.1
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
