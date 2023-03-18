@@ -33,26 +33,26 @@ def refresh_apps(just_delete = False):
 
     apps = []
     
-    # scan provided desktop files
-    for D in src_folders:
-        for i in glob.glob(os.path.join(D, "applications", "*.desktop")):
-            d = Desktop(i)
-            if not d.is_app: continue
-            fpk = d.app
-            tfile = os.path.join(target_folder, desktop_prefix + fpk + ".desktop")
-            if os.path.exists(tfile): continue
-            icon = get_icon(d.icon, 'png')
-            if icon is not None:
-                d.set_icon_path(icon)
-            else:
-                icon = get_icon(d.icon, 'svg')
-                if icon:
-                    os.makedirs(gen_icons_folder, exist_ok=True)
-                    n = os.path.join(gen_icons_folder, d.icon + ".png")
-                    send("saveAsPng", icon, n)
-                    d.set_icon_path(n)
-            d.save_processed(tfile)
-            apps.append( dict(flatpak = fpk,
-                              name = d.name,
-                              icon = d.icon_path) )
+    #    # scan provided desktop files
+    #    for D in src_folders:
+    #        for i in glob.glob(os.path.join(D, "applications", "*.desktop")):
+    #            d = Desktop(i)
+    #            if not d.is_app: continue
+    #            fpk = d.app
+    #            tfile = os.path.join(target_folder, desktop_prefix + fpk + ".desktop")
+    #            if os.path.exists(tfile): continue
+    #            icon = get_icon(d.icon, 'png')
+    #            if icon is not None:
+    #                d.set_icon_path(icon)
+    #            else:
+    #                icon = get_icon(d.icon, 'svg')
+    #                if icon:
+    #                    os.makedirs(gen_icons_folder, exist_ok=True)
+    #                    n = os.path.join(gen_icons_folder, d.icon + ".png")
+    #                    send("saveAsPng", icon, n)
+    #                    d.set_icon_path(n)
+    #            d.save_processed(tfile)
+    #            apps.append( dict(flatpak = fpk,
+    #                              name = d.name,
+    #                              icon = d.icon_path) )
     return apps
