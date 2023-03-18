@@ -26,6 +26,14 @@ BuildRequires:  qt5-qttools-linguist
 %description
 Wrapper for running Qt 5.15 apps on Sailfish.
 
+PackageName: Qt Runner
+Type: desktop-application
+Categories:
+  - Utility
+Custom:
+  Repo: https://github.com/rinigus/qt-runner
+Icon: https://raw.githubusercontent.com/rinigus/qt-runner/main/icons/qt-runner.svg
+
 
 %prep
 %setup -q -n %{name}-%{version}
