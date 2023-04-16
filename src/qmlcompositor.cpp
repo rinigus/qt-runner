@@ -60,6 +60,13 @@ QmlCompositor::QmlCompositor(QQuickView *quickView, const char *socketName)
     connect(m_window, &QWindow::widthChanged, this, &QmlCompositor::sizeChanged);
 }
 
+void QmlCompositor::cleanup()
+{
+    qInfo() << "Closing client application";
+    if (m_fullscreenSurface)
+      destroyClientForSurface(m_fullscreenSurface);
+}
+
 QWaylandQuickSurface *QmlCompositor::fullscreenSurface() const
 {
     return m_fullscreenSurface;

@@ -115,6 +115,16 @@ void Runner::start()
   m_process->start(m_command, m_options);
 }
 
+void Runner::stop()
+{
+  if (m_process)
+    {
+      qInfo() << "Sending terminate signal to the process";
+      m_process->terminate();
+      m_process->waitForFinished(5000);
+    }
+}
+
 void Runner::onError(QProcess::ProcessError /*error*/)
 {
   std::cerr << m_process->errorString().toStdString() << "\n";

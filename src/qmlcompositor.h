@@ -55,6 +55,7 @@ public:
 
     Q_INVOKABLE QWaylandSurfaceItem *item(QWaylandSurface *surf);
     Q_INVOKABLE void setSize(int width, int height);
+    Q_INVOKABLE void cleanup();
 
 signals:
     void windowAdded(QVariant window);

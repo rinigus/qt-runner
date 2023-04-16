@@ -59,6 +59,7 @@ public:
          QString dbusaddress, AppSettings &appsettings, QObject *parent=nullptr);
 
   Q_INVOKABLE void start();
+  Q_INVOKABLE void stop();
 
   bool crashed() const { return m_crashed; }
   int  exitCode() const { return m_exitCode; }

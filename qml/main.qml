@@ -76,6 +76,11 @@ ApplicationWindow {
         }
     }
 
+    Component.onDestruction: {
+        compositor.cleanup();
+        runner.stop();
+    }
+
     onDarkStyleChanged: settings.dark = darkStyle
 
     onReadyChanged: {
