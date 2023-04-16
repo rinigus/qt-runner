@@ -308,10 +308,6 @@ Dialog {
 
                                 value.forceActiveFocus()
                             }
-
-                            Component.onCompleted: {
-                                forceActiveFocus()
-                            }
                         }
 
                         TextField {
