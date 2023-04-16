@@ -187,25 +187,9 @@ int AppSettings::defaultDpi() const
   return qGuiApp->primaryScreen()->physicalDotsPerInch();
 }
 
-void AppSettings::updateApps(QString appsInJson)
+void AppSettings::updateApps()
 {
-  QJsonArray arr = QJsonDocument::fromJson(appsInJson.toUtf8()).array();
-  QSettings settings;
-  QStringList applist;
-  for (QJsonArray::const_iterator iter=arr.constBegin(); iter!=arr.constEnd(); ++iter)
-    {
-      QJsonObject obj = (*iter).toObject();
-      QString program = obj.value("program").toString();
-      QString name = obj.value("name").toString();
-      QString icon = obj.value("icon").toString();
-      if (program.isEmpty()) continue;
-      applist.append(program);
-      settings.setValue(SET_APP + program + "/name", name);
-      settings.setValue(SET_APP + program + "/icon", icon);
-    }
-  settings.setValue(SET_GENERAL "/applist", applist);
-
-  emit appListChanged();
+  // TODO: Check list of the apps included into settings
 }
 
 void AppSettings::rmAppEnvVar(QString program, QString name)

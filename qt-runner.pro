@@ -51,10 +51,8 @@ OTHER_FILES += \
     qml/AppSettingsPage.qml \
     qml/MainPage.qml \
     qml/LabelC.qml \
-    qml/Python.qml \
     qml/Space.qml \
-    qml/WindowContainer.qml \
-    qtr/*.py
+    qml/WindowContainer.qml
 
 DISTFILES += \
     rpm/qt-runner.spec
@@ -70,10 +68,6 @@ HEADERS += \
 scripts.files = scripts
 scripts.path = $$PREFIX/share/$${TARGET}
 INSTALLS += scripts
-
-qtr.files = qtr
-qtr.path = $$PREFIX/share/$${TARGET}
-INSTALLS += qtr
 
 icons.files = icons
 icons.path = $$PREFIX/share/$${TARGET}

@@ -48,7 +48,6 @@ Page {
     property bool appFinished: false
     property bool appStarted: false
     property int  nwindows: 0
-    property bool settingsInitDone: false
 
     BusyIndicator {
         id: busyInd
@@ -123,7 +122,7 @@ Page {
         }
 
         model: ListModel {}
-        visible: settingsInitDone && modeSettings && nwindows <= 0
+        visible: modeSettings && nwindows <= 0
 
         PullDownMenu {
             MenuItem {
@@ -134,25 +133,21 @@ Page {
 
         VerticalScrollDecorator { flickable: alist }
 
-        Connections {
-            target: settings
-            onAppListChanged: {
-                alist.model.clear();
+        Component.onCompleted: {
+            if (!modeSettings) return;
+            alist.model.append({
+                                   'program': settings.defaultApp(),
+                                   'name': qsTr('Default settings'),
+                                   'icon': Qt.resolvedUrl("../icons/qt-runner.svg")
+                               });
+            var apps = settings.apps();
+            apps.forEach(function (item, index) {
                 alist.model.append({
-                                       'program': settings.defaultApp(),
-                                       'name': qsTr('Default settings'),
-                                       'icon': Qt.resolvedUrl("../icons/qt-runner.svg")
-                                   });
-                var apps = settings.apps();
-                apps.forEach(function (item, index) {
-                    alist.model.append({
-                                           'program': item,
-                                           'name': settings.appName(item),
-                                           'icon': settings.appIcon(item)
-                                       })
-                });
-
-            }
+                                       'program': item,
+                                       'name': settings.appName(item),
+                                       'icon': settings.appIcon(item)
+                                   })
+            });
         }
     }
 
@@ -217,31 +212,6 @@ Page {
         }
     }
 
-    // Initialize in Settings mode
-    function initSettings() {
-        busyInd.running = true;
-        if (app.py.call_sync("fpk.has_extension", [programArch]))
-            initSettingsApps();
-        else
-            initSettingsExtension();
-    }
-
-    function initSettingsApps() {
-        busyInfoMessage.text = qsTr("Update list of applications");
-        app.py.call("fpk.refresh_apps", [], function(result) {
-            busyInd.running = false;
-            settings.updateApps(JSON.stringify(result));
-            root.settingsInitDone = true;
-        });
-    }
-
-    function initSettingsExtension() {
-        busyInfoMessage.text = qsTr("Initialize or update GL extension");
-        app.py.call("fpk.sync_extension", [programArch], function() {
-            initSettingsApps()
-        });
-    }
-
     // Handling of contained application
     function windowAdded(window) {
         var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
@@ -255,10 +225,6 @@ Page {
                                                                         popup: nwindows > 0
                                                                     });
 
-//        console.log("New window: " + windowContainer.child + " " +
-//                    windowContainer.child.width + " x " + windowContainer.child.height + " / " +
-//                    windowContainer.child.x + " , " + windowContainer.child.y)
-
         nwindows += 1;
     }
 
@@ -270,7 +236,6 @@ Page {
     function removeWindow(window) {
         window.destroy();
         nwindows -= 1;
-//        console.log("Window destroyed")
     }
 }
 

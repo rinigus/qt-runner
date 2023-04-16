@@ -12,7 +12,6 @@ License:    BSD-3
 URL:        https://github.com/rinigus/qt-runner
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
-Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.5.1
 
 Requires:   opt-qt5-sfos-maliit-platforminputcontext
 Requires:   opt-qt5-qtwayland

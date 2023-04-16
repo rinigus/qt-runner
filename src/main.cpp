@@ -137,6 +137,8 @@ int main(int argc, char *argv[])
     AppSettings settings;
     view->rootContext()->setContextProperty("settings", &settings);
 
+    if (!run) settings.updateApps();
+
     // keyboard rectangle follower
     KeyboardHeight keyheight;
     view->rootContext()->setContextProperty("keyboardHeight", &keyheight);
@@ -161,13 +163,6 @@ int main(int argc, char *argv[])
     // whether settings are allowed and misc variables
     view->rootContext()->setContextProperty("modeSettings", !run);
     view->rootContext()->setContextProperty("programVersion", APP_VERSION);
-    view->rootContext()->setContextProperty("programArch",
-                                        #ifdef AARCH64
-                                            "aarch64"
-                                        #else
-                                            ""
-                                        #endif
-                                            );
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->create();

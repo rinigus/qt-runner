@@ -50,7 +50,6 @@ ApplicationWindow {
     _defaultPageOrientations: allowedOrientations
 
     property bool darkStyle: Theme.colorScheme === Theme.LightOnDark
-    property bool ready: py && py.ready
     property var  py
 
     Connections {
@@ -63,14 +62,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         settings.dark = darkStyle;
-        if (modeSettings) {
-            var pyComponent = Qt.createComponent("Python.qml");
-            if (pyComponent.status !== Component.Ready) {
-                console.warn("Error loading Python: " +  pyComponent.errorString());
-                return;
-            }
-            app.py = pyComponent.createObject(app);
-        } else {
+        if (!modeSettings) {
             settings.applyTheme(runner.program);
             runner.start();
         }
@@ -82,9 +74,4 @@ ApplicationWindow {
     }
 
     onDarkStyleChanged: settings.dark = darkStyle
-
-    onReadyChanged: {
-        if (ready && modeSettings)
-            initialPage.initSettings();
-    }
 }

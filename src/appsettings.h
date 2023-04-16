@@ -65,7 +65,7 @@ public:
   Q_INVOKABLE QString defaultApp() const;
   Q_INVOKABLE int defaultDpi() const;
 
-  Q_INVOKABLE void updateApps(QString appsInJson);
+  Q_INVOKABLE void updateApps();
 
   Q_INVOKABLE void rmAppEnvVar(QString program, QString name);
   Q_INVOKABLE void setAppDpi(QString program, int dpi);
@@ -81,7 +81,6 @@ public:
   void setDark(bool dark);
 
 signals:
-  void appListChanged();
   void darkChanged();
 
 protected:
