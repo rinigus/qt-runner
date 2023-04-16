@@ -64,64 +64,64 @@ Dialog {
                 title: qsTr("Settings: %1").arg(dia.name)
             }
 
-            Column {
-                // theme handling
-                spacing: Theme.paddingMedium
-                width: alist.width
+//            Column {
+//                // theme handling
+//                spacing: Theme.paddingMedium
+//                width: alist.width
 
-                TextSwitch {
-                    id: themesw
-                    text: qsTr("Override theme handling")
-                    description: qsTr("Override default theme handling.")
-                }
+//                TextSwitch {
+//                    id: themesw
+//                    text: qsTr("Override theme handling")
+//                    description: qsTr("Override default theme handling.")
+//                }
 
-                ComboBox {
-                    id: tsw
-                    enabled: themesw.checked
-                    label: qsTr("Theme selection")
-                    description: qsTr("Set application theme.")
-                    menu: ContextMenu {
-                        MenuItem { text: qsTr("Automatic") }
-                        MenuItem { text: qsTr("Light") }
-                        MenuItem { text: qsTr("Dark") }
-                        MenuItem { text: qsTr("Manual") }
-                    }
-                }
+//                ComboBox {
+//                    id: tsw
+//                    enabled: themesw.checked
+//                    label: qsTr("Theme selection")
+//                    description: qsTr("Set application theme.")
+//                    menu: ContextMenu {
+//                        MenuItem { text: qsTr("Automatic") }
+//                        MenuItem { text: qsTr("Light") }
+//                        MenuItem { text: qsTr("Dark") }
+//                        MenuItem { text: qsTr("Manual") }
+//                    }
+//                }
 
-                Component.onCompleted: {
-                    var s = settings.appTheme(program);
+//                Component.onCompleted: {
+//                    var s = settings.appTheme(program);
 
-                    if (program == settings.defaultApp()) {
-                        themesw.checked = true;
-                        themesw.visible = false;
-                    } else {
-                        if (s !== 0) themesw.checked = true;
-                        else themesw.checked = false;
-                    }
+//                    if (program == settings.defaultApp()) {
+//                        themesw.checked = true;
+//                        themesw.visible = false;
+//                    } else {
+//                        if (s !== 0) themesw.checked = true;
+//                        else themesw.checked = false;
+//                    }
 
-                    if (!themesw.checked)
-                        s = settings.appTheme(settings.defaultApp());
+//                    if (!themesw.checked)
+//                        s = settings.appTheme(settings.defaultApp());
 
-                    if (s === 1) tsw.currentIndex = 0;
-                    else if (s === 2) tsw.currentIndex = 1;
-                    else if (s === 3) tsw.currentIndex = 2;
-                    else if (s === -1) tsw.currentIndex = 3;
-                }
+//                    if (s === 1) tsw.currentIndex = 0;
+//                    else if (s === 2) tsw.currentIndex = 1;
+//                    else if (s === 3) tsw.currentIndex = 2;
+//                    else if (s === -1) tsw.currentIndex = 3;
+//                }
 
-                Connections {
-                    target: dia
-                    onAccepted: {
-                        var s = 0;
-                        if (themesw.checked) {
-                            if (tsw.currentIndex === 0) s = 1;
-                            else if (tsw.currentIndex === 1) s = 2;
-                            else if (tsw.currentIndex === 2) s = 3;
-                            else if (tsw.currentIndex === 3) s = -1;
-                        }
-                        settings.setAppTheme(program, s);
-                    }
-                }
-            }
+//                Connections {
+//                    target: dia
+//                    onAccepted: {
+//                        var s = 0;
+//                        if (themesw.checked) {
+//                            if (tsw.currentIndex === 0) s = 1;
+//                            else if (tsw.currentIndex === 1) s = 2;
+//                            else if (tsw.currentIndex === 2) s = 3;
+//                            else if (tsw.currentIndex === 3) s = -1;
+//                        }
+//                        settings.setAppTheme(program, s);
+//                    }
+//                }
+//            }
 
             Column {
                 // scaling switch

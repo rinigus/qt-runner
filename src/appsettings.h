@@ -75,7 +75,7 @@ public:
   Q_INVOKABLE void setAppScaling(QString program, int scaling);
   Q_INVOKABLE void setAppTheme(QString program, int theme);
 
-  Q_INVOKABLE void applyTheme(QString program);
+  //Q_INVOKABLE void applyTheme(QString program);
 
   bool dark() const { return m_dark; }
   void setDark(bool dark);

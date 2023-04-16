@@ -63,7 +63,7 @@ ApplicationWindow {
     Component.onCompleted: {
         settings.dark = darkStyle;
         if (!modeSettings) {
-            settings.applyTheme(runner.program);
+            //settings.applyTheme(runner.program);
             runner.start();
         }
     }

@@ -260,32 +260,32 @@ void AppSettings::setDark(bool dark)
   emit darkChanged();
 }
 
-void AppSettings::applyTheme(QString program)
-{
-  if (program.isEmpty()) return;
+//void AppSettings::applyTheme(QString program)
+//{
+//  if (program.isEmpty()) return;
 
-  int theme = appTheme(program, true);
-  if (theme == THEME_MANUAL) return;
-  if (theme == THEME_AUTO) theme = m_dark ? THEME_DARK : THEME_LIGHT;
+//  int theme = appTheme(program, true);
+//  if (theme == THEME_MANUAL) return;
+//  if (theme == THEME_AUTO) theme = m_dark ? THEME_DARK : THEME_LIGHT;
 
-  if (theme != THEME_DARK && theme != THEME_LIGHT)
-    {
-      qWarning() << "Unsupported theme ID" << theme;
-      return;
-    }
+//  if (theme != THEME_DARK && theme != THEME_LIGHT)
+//    {
+//      qWarning() << "Unsupported theme ID" << theme;
+//      return;
+//    }
 
-  QDir dir = QDir::home();
-  QString path = QStringLiteral(".var/app/%1/config").arg(program);
-  dir.mkpath(path);
-  dir.cd(path);
-  QFile file(dir.absoluteFilePath("kdeglobals"));
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-      qWarning() << "Failed to open file:" << file.fileName();
-      return;
-    }
+//  QDir dir = QDir::home();
+//  QString path = QStringLiteral(".var/app/%1/config").arg(program);
+//  dir.mkpath(path);
+//  dir.cd(path);
+//  QFile file(dir.absoluteFilePath("kdeglobals"));
+//  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+//    {
+//      qWarning() << "Failed to open file:" << file.fileName();
+//      return;
+//    }
 
-  QTextStream txt(&file);
-  if (theme == THEME_DARK) txt << QLatin1String("[Theme]\nname=breeze-dark\n");
-  if (theme == THEME_LIGHT) txt << QLatin1String("[Theme]\nname=default\n");
-}
+//  QTextStream txt(&file);
+//  if (theme == THEME_DARK) txt << QLatin1String("[Theme]\nname=breeze-dark\n");
+//  if (theme == THEME_LIGHT) txt << QLatin1String("[Theme]\nname=default\n");
+//}
