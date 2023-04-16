@@ -15,6 +15,7 @@ Requires:   sailfishsilica-qt5 >= 0.10.9
 
 Requires:   opt-qt5-sfos-maliit-platforminputcontext
 Requires:   opt-qt5-qtwayland
+Requires:   qqc2-breeze-style
 
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
