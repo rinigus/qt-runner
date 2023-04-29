@@ -52,7 +52,7 @@
 
 #define SET_GENERAL "General"
 #define SET_APP "Application "
-#define SETTINGS_VERSION 5
+#define SETTINGS_VERSION 6
 
 // sync with AppSettingsPage.qml
 #define THEME_IGNORE  0 // use default
@@ -76,6 +76,7 @@ AppSettings::AppSettings(QObject *parent) : QObject(parent)
       QMap<QString, QString> env;
       env["QT_QUICK_CONTROLS_STYLE"] = "org.kde.breeze";
       env["QT_QUICK_CONTROLS_MOBILE"] = "1";
+      env["QT_QPA_PLATFORMTHEME"] = "kde";
       // Looks like we don't need these limitations in Qt 5.15
       //      // Recommended in https://bugreports.qt.io/browse/QTBUG-80665
       //      env["QTWEBENGINE_DISABLE_GPU_THREAD"] = "1";

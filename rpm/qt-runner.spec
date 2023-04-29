@@ -5,7 +5,7 @@ Name:       qt-runner
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Qt runner
-Version:    0.3.0
+Version:    0.3.1
 Release:    1
 Group:      Qt/Qt
 License:    BSD-3
@@ -16,6 +16,7 @@ Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   opt-qt5-sfos-maliit-platforminputcontext
 Requires:   opt-qt5-qtwayland
 Requires:   qqc2-breeze-style
+Requires:   opt-plasma-integration
 
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
