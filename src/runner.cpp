@@ -70,6 +70,10 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
   if (env.value("QMLSCENE_DEVICE") == "customcontext")
     env.remove("QMLSCENE_DEVICE");
 
+  // drop QT_WAYLAND_RESIZE_AFTER_SWAP as it leads to inability to interact with the
+  // launched app. This issue appeared after Qt 5.15.9 update
+  env.remove("QT_WAYLAND_RESIZE_AFTER_SWAP");
+
   // dpi and scaling factor
   env.insert("QT_WAYLAND_FORCE_DPI", QString("%1").arg(appsettings.appDpi(program, true)));
   {
