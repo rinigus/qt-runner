@@ -1,8 +1,15 @@
 # Qt Runner
 
-This is a helper program for running Qt 5.15 applications
+This is a helper program for running Qt6 and Qt 5.15 applications
 on Sailfish.
 
+## Installation
+
+On user's devices, install 
+- `qt-runner-opt-qt5` for Qt5.15 support
+- `qt-runner-qt6` for Qt6 support
+
+The both support packages can be installed together.
 
 ## Usage
 
