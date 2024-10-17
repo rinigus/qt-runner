@@ -13,11 +13,6 @@ URL:        https://github.com/rinigus/qt-runner
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
 
-Requires:   opt-qt5-sfos-maliit-platforminputcontext
-Requires:   opt-qt5-qtwayland
-Requires:   qqc2-breeze-style
-Requires:   opt-plasma-integration
-
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
@@ -38,6 +33,43 @@ Custom:
   Repo: https://github.com/rinigus/qt-runner
 Icon: https://raw.githubusercontent.com/rinigus/qt-runner/main/icons/qt-runner.svg
 
+
+%package qt6
+Summary: Requirements for running Qt6
+Requires: qt-runner
+Requires: qt6-sfos-maliit-platforminputcontext
+Requires: qt6-qtwayland
+Requires: kf6-qqc2-breeze-style
+BuildArch:  noarch
+%description qt6
+%{summary}.
+
+PackageName: Qt Runner For Qt6
+Type: desktop-application
+Categories:
+  - Utility
+Custom:
+  Repo: https://github.com/rinigus/qt-runner
+Icon: https://raw.githubusercontent.com/rinigus/qt-runner/main/icons/qt-runner.svg
+
+%package opt-qt5
+Summary: Requirements for running Qt5.15 in /opt
+Requires: qt-runner
+Requires: opt-qt5-sfos-maliit-platforminputcontext
+Requires: opt-qt5-qtwayland
+Requires: qqc2-breeze-style
+Requires: opt-plasma-integration
+BuildArch:  noarch
+%description opt-qt5
+%{summary}.
+
+PackageName: Qt Runner For Qt5.15 in /opt
+Type: desktop-application
+Categories:
+  - Utility
+Custom:
+  Repo: https://github.com/rinigus/qt-runner
+Icon: https://raw.githubusercontent.com/rinigus/qt-runner/main/icons/qt-runner.svg
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -61,3 +93,7 @@ desktop-file-install --delete-original       \
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/%{name}/translations
+
+%files qt6
+
+%files opt-qt5
