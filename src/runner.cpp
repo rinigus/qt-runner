@@ -38,6 +38,7 @@
 #include <QFileInfo>
 #include <QSettings>
 #include <QProcessEnvironment>
+#include <QFile>
 
 #include <iostream>
 #include <unistd.h>
@@ -73,6 +74,13 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
   // drop QT_WAYLAND_RESIZE_AFTER_SWAP as it leads to inability to interact with the
   // launched app. This issue appeared after Qt 5.15.9 update
   env.remove("QT_WAYLAND_RESIZE_AFTER_SWAP");
+
+  // look for a QQC control file in the settings location, if found, use it:
+  QString qqc_conf_loc = QStringLiteral("%1/%2").arg(qset.fileName().section('/', 0, -2)).arg(QStringLiteral("qtquickcontrols2.conf"));
+  if(!env.contains("QT_QUICK_CONTROLS_CONF") && QFile::exists(qqc_conf_loc)) {
+      env.insert("QT_QUICK_CONTROLS_CONF", qqc_conf_loc);
+      qInfo() << "Added QQC configuration file at" << qqc_conf_loc;
+  }
 
   // dpi and scaling factor
   env.insert("QT_WAYLAND_FORCE_DPI", QString("%1").arg(appsettings.appDpi(program, true)));
