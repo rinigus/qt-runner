@@ -12,6 +12,7 @@ License:    BSD-3
 URL:        https://github.com/rinigus/qt-runner
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
+Requires:   amber-qml-plugin-mpris
 
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)

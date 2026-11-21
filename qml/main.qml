@@ -39,18 +39,41 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Amber.Mpris 1.0
 import "."
 
 ApplicationWindow {
     id: app
 
     initialPage: MainPage {}
-    cover: undefined
+    // The app's live window, or, when it plays music (MPRIS), the media player's cover.
+    cover: mprisService !== "" ? mprisCover : undefined
     allowedOrientations: defaultAllowedOrientations
     _defaultPageOrientations: allowedOrientations
 
     property bool darkStyle: Theme.colorScheme === Theme.LightOnDark
     property var  py
+
+    // The app's MPRIS service: by convention named after its program
+    // (org.mpris.MediaPlayer2.<name>, maybe with an instance suffix).
+    readonly property string mprisService: {
+        var name = (runner.program || "").split("/").pop().toLowerCase();
+        var services = mpris.availableServices;
+        for (var i = 0; name !== "" && i < services.length; i++)
+            if (services[i].toLowerCase().indexOf("org.mpris.mediaplayer2." + name) === 0)
+                return services[i];
+        return "";
+    }
+
+    MprisController {
+        id: mpris
+        currentService: app.mprisService
+    }
+
+    Component {
+        id: mprisCover
+        MprisCover { player: mpris }
+    }
 
     Connections {
         target: runner
