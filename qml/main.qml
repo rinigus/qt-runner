@@ -40,6 +40,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Amber.Mpris 1.0
+import Nemo.DBus 2.0
 import "."
 
 ApplicationWindow {
@@ -81,6 +82,17 @@ ApplicationWindow {
             console.log("Skipping quit as it will hang the window. Proper exit is needed");
             // Qt.quit();
         }
+    }
+
+    // org.sailfishos.qtrunner.p<program, as a D-Bus name>, method activate: brings this
+    // window to the front. A program started again (Sailfish's single-instance launch can't
+    // tell qt-runner's apps apart) or asked to show itself (MPRIS Raise) calls it.
+    DBusAdaptor {
+        service: modeSettings ? "" : "org.sailfishos.qtrunner.p" + (runner.program || "").replace(/[^A-Za-z0-9_]/g, "_")
+        path: "/"
+        iface: "org.sailfishos.qtrunner"
+        xml: '<interface name="org.sailfishos.qtrunner"><method name="activate"/></interface>'
+        function activate() { app.activate(); }
     }
 
     Component.onCompleted: {
