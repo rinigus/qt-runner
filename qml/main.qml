@@ -66,8 +66,11 @@ ApplicationWindow {
         return "";
     }
 
+    // The app's own player only: unlocked, Amber follows any player that starts playing
+    // (a video in the browser), and the cover would show and control that one.
     MprisController {
         id: mpris
+        singleService: true
         currentService: app.mprisService
     }
 
